@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="../css/bootstrap.css" rel="stylesheet">
+        <link href="../css/bootstrap-theme.css" rel="stylesheet">
+        <link href="../css/main.css" rel="stylesheet">
+        <title>Rekisteröityminen</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+
+        <div class="container">  
+            <h1>Tukkuliike Tukti</h1>
+            <div class="col-md-offset-2">
+                <h2>Rekisteröidy</h2>
+            </div>
+            <form class="form-horizontal" name="form" role="form" action="http://alrial.users.cs.helsinki.fi/TukTi/html-demo/onnistunutrekisteroityminen.html" onsubmit = "return tarkistarekisteroityminen();" method="POST">      
+                <div class="form-group">
+
+                    <label for="inputName" class="col-md-2 control-label">Nimesi</label>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="inputName" name="Nimi" placeholder="Nimi">
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <label for="inputName" class="col-md-2 control-label">Nimesi</label>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="inputAddress" name="Osoite" placeholder="Osoite">
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <label for="inputEmail1" class="col-md-2 control-label">Uusi tunnus</label>
+                    <div class="col-md-10">
+                        <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword1" class="col-md-2 control-label">Uusi salasana</label>
+                    <div class="col-md-10">
+                        <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-default">Luo tili</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <script> function tarkistarekisteroityminen(){
+                nimi = document.forms[0].inputName.value;
+                osoite = document.forms[0].inputAddress.value;
+                email = document.forms[0].inputEmail.value;
+                salasana = document.forms[0].inputPassword.value;
+                
+                virheilmoitus = "";
+                onnistui = true;
+                if (nimi === ""){
+                    virheilmoitus += "Nimi kenttä ei saa olla tyhjä \n";                    
+                    onnistui = false;
+                }
+                if (osoite === ""){
+                    virheilmoitus += "Osoite kenttä ei saa olla tyhjä \n";                    
+                    onnistui = false;
+                }
+                if (email === ""){
+                    virheilmoitus += "Sähköposti ei saa olla tyhjä \n";
+                    onnistui = false;
+                }
+                if (salasana === ""){
+                    virheilmoitus += "Salasana ei saa olla tyhjä \n";
+                    onnistui = false;
+                }
+                if (onnistui === false){   
+                    alert(virheilmoitus);                  
+                }
+                
+                return onnistui;
+            }
+        </script>
+    </body>
+</html>
