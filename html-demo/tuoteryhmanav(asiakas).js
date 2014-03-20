@@ -12,7 +12,7 @@ document.write('\
                     <tbody>\
                             <tr>\
                                 <td>1</td>\
-                                <td><a href="http://alrial.users.cs.helsinki.fi/TukTi/html-demo/tuoteryhmasisalto.html">Toimistotarvikkeet</a></td>\
+                                <td><a href="http://alrial.users.cs.helsinki.fi/TukTi/html-demo/tuoteryhmasisalto(asiakas).html">Toimistotarvikkeet</a></td>\
                             </tr>\
                             <tr>\
                                 <td>2</td>\
@@ -26,3 +26,4 @@ document.write('\
                     </table>\
 \
 ');
+
