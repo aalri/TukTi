@@ -44,7 +44,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="120.168" width="170.0" x="289.25" y="347.2848119402984"/>
+          <y:Geometry height="120.168" width="170.0" x="289.25" y="381.06071613191517"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="53.14990234375" x="58.425048828125" y="3.0">Asiakas<y:LabelModel>
@@ -102,7 +102,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="135.6866586826347" width="190.88000000000005" x="314.4599999999998" y="198.2854153244259"/>
+          <y:Geometry height="153.21361437125745" width="190.88000000000005" x="314.4599999999998" y="193.52673202371693"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="39.3818359375" x="75.74908203125003" y="3.0">Tuote<y:LabelModel>
@@ -115,6 +115,7 @@
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel>&lt;&lt; key, fkey &gt;&gt;-tuotenro:int
 -nimi:String
+-tiedot:String
 -hinta:decimal
 -jaljella:int
 -lisayskynnys:int
@@ -196,7 +197,6 @@
     </node>
     <node id="n7">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
           <y:Geometry height="79.85057724550893" width="113.87550658682633" x="4.345449101796362" y="347.2848119402984"/>
@@ -223,7 +223,7 @@ salasana:String</y:AttributeLabel>
         <y:PolyLineEdge>
           <y:Path sx="-57.10285522383333" sy="-4.439932203389844" tx="54.1861859257491" ty="-23.949170149253803">
             <y:Point x="479.25" y="491.04406779661014"/>
-            <y:Point x="479.25" y="383.4196417910446"/>
+            <y:Point x="479.25" y="417.1955459826614"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
@@ -247,7 +247,7 @@ salasana:String</y:AttributeLabel>
     <edge id="e2" source="n2" target="n3">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="-30.040882150818565" sy="-11.178584665743244" tx="0.882570596407902" ty="-31.003512531533886">
+          <y:Path sx="-30.040882150818565" sy="-11.178584665743244" tx="0.882570596407902" ty="-35.00830707513629">
             <y:Point x="542.0876812500039" y="254.95015999999998"/>
             <y:Point x="542.0876812500039" y="235.1252321342094"/>
           </y:Path>
@@ -273,9 +273,9 @@ salasana:String</y:AttributeLabel>
     <edge id="e4" source="n5" target="n3">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="110.009765625" sy="0.0" tx="-22.337907104191345" ty="-30.830597513647405">
+          <y:Path sx="110.009765625" sy="0.0" tx="-26.18190168143667" ty="-38.5744759374893">
             <y:Point x="294.656" y="256.64879999999994"/>
-            <y:Point x="294.656" y="235.29814715209588"/>
+            <y:Point x="294.656" y="231.55906327185636"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
