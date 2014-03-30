@@ -1,5 +1,4 @@
 <?php
-if (kirjautunutAsiakas()) {
     if (count($data->nykyinentilaus->getRivit()) !== 0) {
         ?>
         <h2>Nykyinen tilaus</h2>
@@ -35,7 +34,6 @@ if (kirjautunutAsiakas()) {
         <h2>Nykyinen tilauksesi on tyhjä</h2>
         <?php
     }
-}
 ?>
 <?php if (!empty($data->onnistui)): ?>
     <div class="alert alert-success"><?php echo $data->onnistui; ?></div>

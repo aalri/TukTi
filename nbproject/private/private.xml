@@ -4,18 +4,35 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/tilaukset.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/login.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/listaustesti.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/kaikkilaskut.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/libs/models/tilausrivi.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/views/kaikkilaskut.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/views/tuoteryhma.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/views/tuoteryhmatjatuotteet.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/tuoteryhmatjatuotteet.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/libs/models/tilaus.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/tarkempiatilaustietoja.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/views/tuoteryhmalista.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/index.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/laskuni.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/libs/common.php</file>
             <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/libs/models/asiakas.php</file>
             <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/sql/create-tables.sql</file>
-            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/libs/models/tilausrivi.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/html-demo/tuoteryhmattuotteet.html</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/views/asiakkaat.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/kaikkitilaukset.php</file>
             <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/esittelysivu.html</file>
             <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/views/tilaukset.php</file>
             <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/views/nav.php</file>
-            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/libs/models/tilaus.php</file>
-            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/tarkempiatilaustietoja.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/views/kaikkitilaukset.php</file>
             <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/views/laskuni.php</file>
-            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/views/pohja.php</file>
-            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/sql/add-test-data.sql</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/asiakkaat.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/tuoteryhma.php</file>
             <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/libs/models/tuote.php</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/sql/add-test-data.sql</file>
+            <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/views/pohja.php</file>
             <file>file:/C:/Users/Riku/Documents/HY/TukTi/TukTi/views/tarkempiatilaustietoja.php</file>
         </group>
     </open-files>

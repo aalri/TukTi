@@ -1,4 +1,3 @@
-    
 <h2>Varasto</h2>
 <table class="table table-striped">
     <thead>
