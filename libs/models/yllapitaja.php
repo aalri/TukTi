@@ -25,7 +25,7 @@ class Yllapitaja {
     }    
     
     public function getTunnus() {
-        return $this->tunnus;
+        return htmlspecialchars($this->tunnus);
     }
     
     public function setSalasana($salasana) {
@@ -37,7 +37,7 @@ class Yllapitaja {
     }
 
     public static function getYllapitajat() {
-        $sql = "SELECT Id, tunnus, salasana FROM Yllapitaja";
+        $sql = "SELECT Id, tunnus, salasana FROM Yllapitaja ORDER BY Id ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute();        
         $tulokset = array();

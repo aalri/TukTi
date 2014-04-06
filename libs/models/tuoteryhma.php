@@ -4,10 +4,12 @@ class Tuoteryhma {
 
     private $tuoteryhmanro;
     private $nimi;
+    private $virhe;
 
     public function __construct($tuoteryhmanro, $nimi) {
         $this->tuoteryhmanro = $tuoteryhmanro;
         $this->nimi = $nimi;
+        $this->virhe = "";
     }
 
     public function setTuoteryhmanro($tuoteryhmanro) {
@@ -23,13 +25,28 @@ class Tuoteryhma {
     }
 
     public function getNimi() {
-        return $this->nimi;
+        return htmlspecialchars($this->nimi);
     }
 
     public static function getTuoteryhmat() {
-        $sql = "SELECT tuoteryhmanro, nimi FROM Tuoteryhma";
+        $sql = "SELECT tuoteryhmanro, nimi FROM Tuoteryhma ORDER BY tuoteryhmanro ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute();
+        $tulokset = array();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $tuoteryhma = new Tuoteryhma();
+            $tuoteryhma->setTuoteryhmanro($tulos->tuoteryhmanro);
+            $tuoteryhma->setNimi($tulos->nimi);
+
+            $tulokset[] = $tuoteryhma;
+        }
+        return $tulokset;
+    }
+    
+    public static function getTuoteryhmatTiettyMaaraKohdasta($maara, $kohta) {        
+        $sql = "SELECT tuoteryhmanro, nimi FROM Tuoteryhma ORDER BY tuoteryhmanro ASC LIMIT ? OFFSET ?";
+        $kysely = getTietokantayhteys()->prepare($sql);        
+        $kysely->execute(array($maara, $kohta)); 
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
             $tuoteryhma = new Tuoteryhma();
@@ -50,11 +67,59 @@ class Tuoteryhma {
             return null;
         } else {
             $tuoteryhma = new Tuoteryhma();
-            $tuoteryhma->setTuoteryhmanro($tulos->asiakasnro);
+            $tuoteryhma->setTuoteryhmanro($tulos->tuoteryhmanro);
             $tuoteryhma->setNimi($tulos->nimi);
 
             return $tuoteryhma;
         }
+    }
+
+    public function lisaaKantaan() {
+        $sql = "INSERT INTO Tuoteryhma(nimi) VALUES(?) RETURNING tuoteryhmanro";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $ok = $kysely->execute(array($this->nimi));
+        if ($ok) {
+            //Haetaan RETURNING-määreen palauttama id.
+            //HUOM! Tämä toimii ainoastaan PostgreSQL-kannalla!
+            $this->tuoteryhmanro = $kysely->fetchColumn();
+        }
+        return $ok;
+    }
+
+    public function onkoKelvollinen() {
+        $ok = true;
+        $this->virhe = "";
+        if ($this->nimi === "") {
+            $this->virhe .= "Nimi ei saa olla tyhjä. \n";
+            $ok = false;
+        } else if (strlen($this->nimi) > 50) {
+            $this->virhe .= "Nimi on yli 50 merkkiä, mikä on liian pitkä. (määrä: " . strlen($this->nimi) . ") \n";
+            $ok = false;
+        }
+        return $ok;
+    }
+
+    public function getVirhe() {
+        return $this->virhe;
+    }
+
+    public function paivitaKantaan() {
+        $sql = "UPDATE Tuoteryhma SET nimi = ? WHERE tuoteryhmanro = ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($this->nimi, $this->getTuoteryhmanro()));
+    }
+
+    public static function poista($tuoteryhmanro) {
+        $sql = "DELETE FROM Tuoteryhma WHERE tuoteryhmanro = ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($tuoteryhmanro));
+    }
+    
+    public static function lukumaara() {
+        $sql = "SELECT count(*) FROM tuoteryhma";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute();
+        return $kysely->fetchColumn();
     }
 
 }

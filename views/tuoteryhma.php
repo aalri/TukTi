@@ -10,6 +10,7 @@ if ($data->tuoteryhma === null) {
 } else {
     ?> 
     <h2><?php echo $data->tuoteryhma->getNimi(); ?></h2>
+    <p>Sivu <?php echo $data->sivu ?>/<?php echo $data->sivuja ?></p>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -45,7 +46,14 @@ if ($data->tuoteryhma === null) {
         ?>    
     </tbody>
 </table>
-<a href="http://alrial.users.cs.helsinki.fi/TukTi/index.php?ikkuna=tuoteryhmat" class="btn btn-xs btn-default" role="button"> Palaa</a>
+<?php if ($data->sivu > 1): ?>
+<a href="?ikkuna=tuoteryhma&tuoteryhma=<?php echo $data->tuoteryhma->getTuoteryhmanro() ?>&sivu=<?php echo $data->sivu - 1; ?>" class="btn btn-xs btn-default" role="button">Edellinen sivu</a>
+<?php endif; ?>
+<?php if ($data->sivu < $data->sivuja): ?>
+<a href="?ikkuna=tuoteryhma&tuoteryhma=<?php echo $data->tuoteryhma->getTuoteryhmanro() ?>&sivu=<?php echo $data->sivu + 1; ?>" class="btn btn-xs btn-default" role="button">Seuraava sivu</a>
+<?php endif; ?>
+<br></br>
+<a href="?ikkuna=tuoteryhmat" class="btn btn-xs btn-default" role="button"> Palaa</a>
 <?php if (!empty($data->virhe)): ?>
     <div class="alert alert-danger"><?php echo $data->virhe; ?></div>
 <?php endif; ?>

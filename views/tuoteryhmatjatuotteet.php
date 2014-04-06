@@ -1,8 +1,9 @@
 <h2>Tuoteryhmät</h2>
+<p>Sivu <?php echo $data->sivu ?>/<?php echo $data->sivuja ?></p>
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Tuoteryhmännro</th>
+            <th>Tuoteryhmänro</th>
             <th>Tuoteryhmä</th>
         </tr>
     </thead>
@@ -13,13 +14,23 @@
             <tr>                                    
                 <td><?php echo $asia->getTuoteryhmanro(); ?></td>
                 <td><?php echo $asia->getNimi(); ?></td>
-                <td><a href="#" class="btn btn-xs btn-default" role="button"><span class="glyphicon glyphicon-cog"></span>  Muokkaa tuoteryhmaan kuuluvia tuotteita</a></td>
-                <td><a href="#" class="btn btn-xs btn-default" role="button"><span class="glyphicon glyphicon-cog"></span>  Muokkaa tuoteryhman nimea</a></td>
-                <td><button type="button" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-remove"></span> Poista tuoteryhma</button></td>
+                <td><a href="?ikkuna=muokkaatuoteryhmaankuuluvattuotteet&tuoteryhma=<?php echo $asia->getTuoteryhmanro();?>" class="btn btn-xs btn-default" role="button"><span class="glyphicon glyphicon-cog"></span>  Muokkaa tuoteryhmään kuuluvia tuotteita</a></td>
+                <td><a href="?ikkuna=muokkaatuoteryhmannimea&tuoteryhma=<?php echo $asia->getTuoteryhmanro();?>" class="btn btn-xs btn-default" role="button"><span class="glyphicon glyphicon-cog"></span>  Muokkaa tuoteryhmän nimeä</a></td>
+                <td><form class="form-vertical" role="form" method="POST" action=""> 
+                        <input type="hidden" name="poista" value="<?php echo $asia->getTuoteryhmanro(); ?>">
+                        <button type="submit" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-remove"></span> Poista tuoteryhmä</button>
+                    </form></td>
             </tr>
             <?php
         endforeach;
         ?>
     </tbody>
 </table>    
-<a href="#" class="btn btn-xs btn-default" role="button"><span class="glyphicon glyphicon-plus"></span> Lisää uusi tuoteryhmä</a>
+<?php if ($data->sivu > 1): ?>
+<a href="?ikkuna=tuoteryhmatjatuotteet&sivu=<?php echo $data->sivu - 1; ?>" class="btn btn-xs btn-default" role="button">Edellinen sivu</a>
+<?php endif; ?>
+<?php if ($data->sivu < $data->sivuja): ?>
+<a href="?ikkuna=tuoteryhmatjatuotteet&sivu=<?php echo $data->sivu + 1; ?>" class="btn btn-xs btn-default" role="button">Seuraava sivu</a>
+<?php endif; ?>
+<br></br>
+<a href="?ikkuna=lisaauusituoteryhma" class="btn btn-xs btn-default" role="button"><span class="glyphicon glyphicon-plus"></span> Lisää uusi tuoteryhmä</a>

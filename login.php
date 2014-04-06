@@ -12,6 +12,7 @@ require_once 'libs/yhteydenotto.php';
 if (empty($_POST["username"]) && empty($_POST["password"])) {
     /* Käytetään omassa kirjastotiedostossa määriteltyä näkymännäyttöfunktioita */
     naytaNakyma("kirjautuminen.php");
+    exit();
 }
 
 $kayttaja = $_POST["username"];

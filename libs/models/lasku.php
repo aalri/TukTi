@@ -46,7 +46,7 @@ class Lasku {
     }
 
     public static function getLaskut() {        
-        $sql = "SELECT laskunro, tilausnro, tyyppi, erapaiva FROM Lasku";
+        $sql = "SELECT laskunro, tilausnro, tyyppi, erapaiva FROM Lasku ORDER BY laskunro ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute();        
         $tulokset = array();
@@ -63,7 +63,7 @@ class Lasku {
     }
     
     public static function getLaskutAsiakasnumerolla($asiakasnro) {        
-        $sql = "SELECT A.laskunro, A.tilausnro, A.tyyppi, A.erapaiva FROM Lasku A, Tilaus B where A.tilausnro = B.tilausnro and B.asiakasnro = ?";
+        $sql = "SELECT A.laskunro, A.tilausnro, A.tyyppi, A.erapaiva FROM Lasku A, Tilaus B where A.tilausnro = B.tilausnro and B.asiakasnro = ? ORDER BY laskunro ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($asiakasnro));        
         $tulokset = array();

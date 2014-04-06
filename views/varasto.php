@@ -1,4 +1,5 @@
 <h2>Varasto</h2>
+<p>Sivu <?php echo $data->sivu ?>/<?php echo $data->sivuja ?></p>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -11,36 +12,32 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>1</td>
-            <td>Pasta Pyyhekumi</td>
-            <td>600</td>
-            <td>0.80</td>
-            <td>700</td>
-            <td>1200</td>
-            <td><a href="http://alrial.users.cs.helsinki.fi/TukTi/html-demo/muokkaatuote.html" class="btn btn-xs btn-default" role="button"><span class="glyphicon glyphicon-cog"></span> Muokkaa riviä</a></td>
-            <td><button type="button" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-remove"></span> Poista tuote</button></td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Pasta Lyijykyna</td>
-            <td>1400</td>   
-            <td>0.20</td>
-            <td>1300</td>
-            <td>1800</td>
-            <td><a href="http://alrial.users.cs.helsinki.fi/TukTi/html-demo/muokkaatuote.html" class="btn btn-xs btn-default" role="button"><span class="glyphicon glyphicon-cog"></span> Muokkaa riviä</a></td>
-            <td><button type="button" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-remove"></span> Poista tuote</button></td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>Liilan Jakkara</td>
-            <td>40</td>
-            <td>45.00</td>
-            <td>20</td>
-            <td>30</td>
-            <td><a href="http://alrial.users.cs.helsinki.fi/TukTi/html-demo/muokkaatuote.html" class="btn btn-xs btn-default" role="button"><span class="glyphicon glyphicon-cog"></span> Muokkaa riviä</a></td>
-            <td><button type="button" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-remove"></span> Poista tuote</button></td>
-        </tr>
+        <?php foreach ($data->lista as $asia):
+            if (!$asia->onPoistettu()){
+            ?>        
+            <tr>                                    
+                <td><?php echo $asia->getTuotenro(); ?></td>
+                <td><?php echo $asia->getNimi(); ?></td>      
+                <td><?php echo $asia->getJaljella(); ?></td>
+                <td><?php echo $asia->getHinta(); ?></td>                 
+                <td><?php echo $asia->getLisayskynnys(); ?></td>
+                <td><?php echo $asia->getLisaysmaara(); ?></td>
+                <td><a href="?ikkuna=muokkaatuote&tuotenro=<?php echo $asia->getTuotenro();?>" class="btn btn-xs btn-default" role="button"><span class="glyphicon glyphicon-cog"></span>  Muokkaa tuotetietoja</a></td>
+                <td><form class="form-vertical" role="form" method="POST" action=""> 
+                        <input type="hidden" name="poista" value="<?php echo $asia->getTuotenro(); ?>">
+                        <button type="submit" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-remove"></span> Poista tuote</button>
+                    </form></td>
+            </tr>            
+            <?php
+            }
+        endforeach; ?>
     </tbody>
 </table>
-<a href="http://alrial.users.cs.helsinki.fi/TukTi/html-demo/uusituote.html" class="btn btn-xs btn-default" role="button"><span class="glyphicon glyphicon-plus"></span> Lisää tuote</a>
+<?php if ($data->sivu > 1): ?>
+<a href="?ikkuna=varasto&sivu=<?php echo $data->sivu - 1; ?>" class="btn btn-xs btn-default" role="button">Edellinen sivu</a>
+<?php endif; ?>
+<?php if ($data->sivu < $data->sivuja): ?>
+<a href="?ikkuna=varasto&sivu=<?php echo $data->sivu + 1; ?>" class="btn btn-xs btn-default" role="button">Seuraava sivu</a>
+<?php endif; ?>
+<br></br>
+<a href="?ikkuna=lisaauusituote" class="btn btn-xs btn-default" role="button"><span class="glyphicon glyphicon-plus"></span> Lisää tuote</a>

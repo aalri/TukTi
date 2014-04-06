@@ -31,7 +31,7 @@ class Asiakas {
     }
 
     public function getNimi() {
-        return $this->nimi;
+        return htmlspecialchars($this->nimi);
     }
 
     public function setOsoite($osoite) {
@@ -39,7 +39,7 @@ class Asiakas {
     }
 
     public function getOsoite() {
-        return $this->osoite;
+        return htmlspecialchars($this->osoite);
     }
 
     public function setTunnus($tunnus) {
@@ -47,7 +47,7 @@ class Asiakas {
     }
 
     public function getTunnus() {
-        return $this->tunnus;
+        return htmlspecialchars($this->tunnus);
     }
 
     public function setSalasana($salasana) {
@@ -74,7 +74,7 @@ class Asiakas {
     }
 
     public static function getAsiakkaat() {
-        $sql = "SELECT asiakasnro, nimi, osoite, tunnus, salasana, poistettu FROM Asiakas";
+        $sql = "SELECT asiakasnro, nimi, osoite, tunnus, salasana, poistettu FROM Asiakas ORDER BY 1 ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute();
         $tulokset = array();

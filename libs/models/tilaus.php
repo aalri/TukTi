@@ -72,7 +72,7 @@ class Tilaus {
     }
 
     public static function getTilaukset() {
-        $sql = "SELECT tilausnro, toimitettu, tilauspaiva, asiakasnro, maksettu, maksettupaiva FROM Tilaus";
+        $sql = "SELECT tilausnro, toimitettu, tilauspaiva, asiakasnro, maksettu, maksettupaiva FROM Tilaus ORDER BY tilausnro ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute();        
         $tulokset = array();
@@ -91,7 +91,7 @@ class Tilaus {
     }
     
     public static function getTilauksetAsiakasnumerolla($asiakasnro) {
-        $sql = "SELECT tilausnro, toimitettu, tilauspaiva, asiakasnro, maksettu, maksettupaiva FROM Tilaus where asiakasnro = ?";
+        $sql = "SELECT tilausnro, toimitettu, tilauspaiva, asiakasnro, maksettu, maksettupaiva FROM Tilaus where asiakasnro = ? ORDER BY tilausnro ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($asiakasnro));        
         $tulokset = array();

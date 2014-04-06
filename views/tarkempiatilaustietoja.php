@@ -22,4 +22,4 @@
 </table>
 <form class="form-vertical" role="form" method="POST" action=""> 
         <button type="submit" class="btn btn-default" name="palaa" value="1">Palaa</button>
-    </form> 
+</form> 

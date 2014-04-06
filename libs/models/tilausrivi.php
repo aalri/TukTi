@@ -1,5 +1,5 @@
 <?php
-   
+
 class Tilausrivi {
 
     private $tilausnro;
@@ -37,23 +37,23 @@ class Tilausrivi {
     public function getLkm() {
         return $this->lkm;
     }
-    
+
     public function setOstoHetkenKplhinta($ostohetkenkplhinta) {
-        $this->ostohetkenkplhinta= $ostohetkenkplhinta;
-    }    
-    
+        $this->ostohetkenkplhinta = $ostohetkenkplhinta;
+    }
+
     public function getOstoHetkenKplhinta() {
         return $this->ostohetkenkplhinta;
     }
-    
+
     public function getYhteensa() {
         return $this->lkm * $this->ostohetkenkplhinta;
     }
 
     public static function getTilausrivit() {
-        $sql = "SELECT tilausnro, tuotenro, lkm, ostohetkenkplhinta FROM Tilausrivi";
+        $sql = "SELECT tilausnro, tuotenro, lkm, ostohetkenkplhinta FROM Tilausrivi ORDER BY tilausnro";
         $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute();        
+        $kysely->execute();
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
             $tilausrivi = new Tilausrivi();
@@ -65,11 +65,11 @@ class Tilausrivi {
         }
         return $tulokset;
     }
-    
+
     public static function getTilausrivitTilausnumerolla($tilausnro) {
-        $sql = "SELECT tilausnro, tuotenro, lkm, ostohetkenkplhinta FROM Tilausrivi where tilausnro = ?";
+        $sql = "SELECT tilausnro, tuotenro, lkm, ostohetkenkplhinta FROM Tilausrivi where tilausnro = ? ORDER BY tilausnro ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute(array($tilausnro));        
+        $kysely->execute(array($tilausnro));
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
             $tilausrivi = new Tilausrivi();
@@ -81,17 +81,29 @@ class Tilausrivi {
             $tulokset[] = $tilausrivi;
         }
         return $tulokset;
-    }    
-    
+    }
+
     public static function getTilausrivitHintaYhteensaTilausnumerolla($tilausnro) {
         $sql = "SELECT lkm, ostohetkenkplhinta FROM Tilausrivi where tilausnro = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute(array($tilausnro));        
+        $kysely->execute(array($tilausnro));
         $yhteensa = 0.0;
-        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {            
-            $yhteensa += (double)$tulos->lkm * (double)$tulos->ostohetkenkplhinta;
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $yhteensa += (double) $tulos->lkm * (double) $tulos->ostohetkenkplhinta;
         }
         return $yhteensa;
-    }    
+    }
+
+    public static function onTilausrivejaTuotenumerolla($tuotenro) {
+        $sql = "SELECT tilausnro, tuotenro, lkm, ostohetkenkplhinta FROM Tilausrivi where tilausnro = ? LIMIT 1";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($tuotenro));
+        $tulos = $kysely->fetchObject();
+        if ($tulos == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
 }

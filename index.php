@@ -8,15 +8,25 @@ require_once 'libs/common.php';
 $ikkuna = (String) $_GET['ikkuna'];
 if ($ikkuna === 'varasto' && kirjautunutYllapitaja()) {
     $sivu = 'varasto.php';
+} else if ($ikkuna === 'muokkaatuote' && kirjautunutYllapitaja()) {
+    $sivu = 'muokkaatuote.php';
+} else if ($ikkuna === 'lisaauusituote' && kirjautunutYllapitaja()) {
+    $sivu = 'lisaauusituote.php';
 } else if ($ikkuna === 'kaikkilaskut' && kirjautunutYllapitaja()) {
     $sivu = 'kaikkilaskut.php';
 } else if ($ikkuna === 'asiakkaat' && kirjautunutYllapitaja()) {
     $sivu = 'asiakkaat.php';
 } else if ($ikkuna === 'tuoteryhmatjatuotteet' && kirjautunutYllapitaja()) {
     $sivu = 'tuoteryhmatjatuotteet.php';
+} else if ($ikkuna === 'lisaauusituoteryhma' && kirjautunutYllapitaja()) {
+    $sivu = 'lisaauusituoteryhma.php';
+} else if ($ikkuna === 'muokkaatuoteryhmannimea' && kirjautunutYllapitaja()) {
+    $sivu = 'muokkaatuoteryhmannimea.php';
+} else if ($ikkuna === 'muokkaatuoteryhmaankuuluvattuotteet' && kirjautunutYllapitaja()) {
+    $sivu = 'muokkaatuoteryhmaankuuluvattuotteet.php';
 } else if ($ikkuna === 'kaikkitilaukset' && kirjautunutYllapitaja()) {
     $sivu = 'kaikkitilaukset.php';
-} else if ($ikkuna === 'tuoteryhma') {
+} else if ($ikkuna === 'tuoteryhma' && !kirjautunutYllapitaja()) {
     $sivu = 'tuoteryhma.php';
 } else if ($ikkuna === 'etusivu') {
     $sivu = 'etusivu.php';
@@ -30,7 +40,7 @@ if ($ikkuna === 'varasto' && kirjautunutYllapitaja()) {
     $sivu = 'tarkempiatilaustietoja.php';
 } else if ($ikkuna === 'nykyinentilaus' && kirjautunutAsiakas()) {
     $sivu = 'nykyinentilaus.php';
-} else if ($ikkuna === 'tuoteryhmat') {
+} else if ($ikkuna === 'tuoteryhmat' && !kirjautunutYllapitaja()) {
     $sivu = 'tuoteryhmalista.php';
 } else {
     header('Location: index.php?ikkuna=etusivu');

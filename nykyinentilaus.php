@@ -15,7 +15,7 @@ if (kirjautunutAsiakas()) {
         $nykyinentilaus->poistaTilauksesta($tuotenro);
         $_SESSION['nykyinentilaus'] = $nykyinentilaus;
         naytaNakyma("nykyinentilaus.php", array(
-            'nykyinentilaus' => $nykyinentilaus, 'onnistui' => "Tuotetta " . Tuote::getTuoteNimiNumerolla($tuotenro) . " poistettu tilauksesta", request
+            'nykyinentilaus' => $nykyinentilaus, 'onnistui' => "Tuote " . Tuote::getTuoteNimiNumerolla($tuotenro) . " poistettu tilauksesta", request
         ));
     }
 }
