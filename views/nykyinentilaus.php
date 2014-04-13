@@ -7,6 +7,7 @@
                 <tr>
                     <th>Tuotenimi</th>
                     <th>Maara</th>
+                    <th>Hinta</th>
                 </tr>
             </thead>
             <tbody>
@@ -16,6 +17,7 @@
                     <tr>                                    
                         <td><?php echo Tuote::getTuoteNimiNumerolla($asia->getTuotenro()); ?></td>
                         <td><?php echo $asia->getMaara() ?></td>
+                        <td><?php echo money_format('%.2n',$asia->getKappalehinta() * $asia->getMaara()) ?> e</td>
                         <td>
                             <form class="form-vertical" role="form" method="POST" action=""> 
                                 <input type="hidden" name="tuotenro" value="<?php echo $asia->getTuotenro(); ?>">
@@ -28,6 +30,7 @@
                 ?>
             </tbody>
         </table>
+        <h4>Yhteensä: <?php echo money_format('%.2n',$data->nykyinentilaus->hintaYhteensa()) ?> e </h4>
         <?php
     }else{
         ?>

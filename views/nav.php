@@ -37,7 +37,7 @@ if (kirjautunutAsiakas()) {
                 <li class="active"><a href="?ikkuna=etusivu">Etusivu</a></li>
                 <li><a href="?ikkuna=tuoteryhmat">Tuoteryhmät</a></li>
                 <li><a href="login.php">Kirjautuminen</a></li>
-                <li><a href="#">Rekisteröidy</a></li>
+                <li><a href="register.php">Rekisteröidy</a></li>
             </ul>
         </div>
 <?php

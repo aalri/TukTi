@@ -263,8 +263,6 @@ class Tuote {
         $kysely = getTietokantayhteys()->prepare($sql);
         $ok = $kysely->execute(array($this->nimi, $this->tiedot, $this->getHinta(), $this->getJaljella(), $this->getLisayskynnys(), $this->getLisaysmaara(), $this->getPoistettu()));
         if ($ok) {
-            //Haetaan RETURNING-määreen palauttama id.
-            //HUOM! Tämä toimii ainoastaan PostgreSQL-kannalla!
             $this->tuotenro = $kysely->fetchColumn();
         }
         return $ok;
@@ -329,6 +327,33 @@ class Tuote {
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($tuoteryhmanro));
         return $kysely->fetchColumn();
+    }
+    
+    public static function loytyyTuoteMaarat($tilausnro) {
+        $sql = "SELECT A.tuotenro, A.lkm, B.jaljella FROM tilausrivi A, Tuote B where A.tilausnro = ? and A.tuotenro = B.tuotenro";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($tilausnro));
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            if ($tulos->lkm > $tulos->jaljella){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public static function vahennaTuoteMaarat($tilausnro) {
+        $sql = "SELECT tuotenro, lkm FROM tilausrivi where tilausnro = ?;";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($tilausnro));
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $sql = "SELECT jaljella FROM Tuote where tuotenro = ? LIMIT 1";
+            $kysely = getTietokantayhteys()->prepare($sql);
+            $kysely->execute(array($tulos->tuotenro));
+            $jaljella = $kysely->fetchObject();
+            $sql = "UPDATE Tuote SET jaljella = ? where tuotenro = ?;";
+            $kysely = getTietokantayhteys()->prepare($sql);
+            $kysely->execute(array(($jaljella->jaljella - $tulos->lkm), $tulos->tuotenro));
+        }
     }
 
 }

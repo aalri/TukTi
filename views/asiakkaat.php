@@ -1,4 +1,5 @@
 <h2>Asiakkaat</h2>
+<p>Sivu <?php echo $data->sivu ?>/<?php echo $data->sivuja ?></p>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -31,3 +32,9 @@
         ?>
     </tbody>
 </table>
+<?php if ($data->sivu > 1): ?>
+<a href="?ikkuna=asiakkaat&sivu=<?php echo $data->sivu - 1; ?>" class="btn btn-xs btn-default" role="button">Edellinen sivu</a>
+<?php endif; ?>
+<?php if ($data->sivu < $data->sivuja): ?>
+<a href="?ikkuna=asiakkaat&sivu=<?php echo $data->sivu + 1; ?>" class="btn btn-xs btn-default" role="button">Seuraava sivu</a>
+<?php endif; ?>

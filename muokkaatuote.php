@@ -14,7 +14,6 @@ if (empty($_POST['tallennettumuutokset'])) {
     ));
     exit();
 }
-$tuote;
 $uusituote = new Tuote($tuotenro, $_POST['nimi'], $_POST['tietoja'], $_POST['hinta'], $_POST['maara'], $_POST['lisayskynnys'], $_POST['lisaysmaara'], "Ei");
 if ($uusituote->onkoKelvollinen()) {
     $uusituote->paivitaKantaan();

@@ -37,8 +37,22 @@ function Yllapitajatiedot() {
 
 function annaKokonaislukuna($merkkijono) {
     if (!preg_match('/^\d+$/', $merkkijono)) {
-         return -1;
+        return -1;
     } else {
         return $merkkijono;
     }
+}
+
+function annaNykyinenSivu($sivuja) {
+    if (isset($_GET['sivu'])) {
+        $sivu = (int) $_GET['sivu'];
+        if ($sivu < 1) {
+            $sivu = 1;
+        }
+        if ($sivu > $sivuja) {
+            $sivu = $sivuja;
+        }
+        return $sivu;
+    }
+    return 1;
 }

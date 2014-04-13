@@ -1,4 +1,5 @@
 <?php
+
 class Lasku {
 
     private $laskunro;
@@ -36,19 +37,19 @@ class Lasku {
     public function getTyyppi() {
         return $this->tyyppi;
     }
-    
+
     public function setErapaiva($erapaiva) {
         $this->erapaiva = $erapaiva;
-    }    
-    
+    }
+
     public function getErapaiva() {
         return $this->erapaiva;
     }
 
-    public static function getLaskut() {        
+    public static function getLaskut() {
         $sql = "SELECT laskunro, tilausnro, tyyppi, erapaiva FROM Lasku ORDER BY laskunro ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute();        
+        $kysely->execute();
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
             $lasku = new Lasku();
@@ -61,11 +62,11 @@ class Lasku {
         }
         return $tulokset;
     }
-    
-    public static function getLaskutAsiakasnumerolla($asiakasnro) {        
+
+    public static function getLaskutAsiakasnumerolla($asiakasnro) {
         $sql = "SELECT A.laskunro, A.tilausnro, A.tyyppi, A.erapaiva FROM Lasku A, Tilaus B where A.tilausnro = B.tilausnro and B.asiakasnro = ? ORDER BY laskunro ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute(array($asiakasnro));        
+        $kysely->execute(array($asiakasnro));
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
             $lasku = new Lasku();
@@ -77,6 +78,133 @@ class Lasku {
             $tulokset[] = $lasku;
         }
         return $tulokset;
+    }
+
+    public static function getLaskuNumerolla($laskunro) {
+        $sql = "SELECT laskunro, tilausnro, tyyppi, erapaiva FROM Lasku where laskunro = ? LIMIT 1";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($laskunro));
+        $tulos = $kysely->fetchObject();
+        $lasku = new Lasku($tulos->laskunro, $tulos->tilausnro, $tulos->tyyppi, $tulos->erapaiva);
+        return $lasku;
+    }
+
+    public static function onMaksamattomiaKarhujaAsiakasnrolla($asiakasnro) {
+        $sql = "SELECT A.laskunro, A.tilausnro, A.tyyppi, A.erapaiva FROM Lasku A, Tilaus B where A.tilausnro = B.tilausnro and B.asiakasnro = ? and B.maksettu not like 'Kylla' and A.tyyppi = 'Karhu1' LIMIT 1";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($asiakasnro));
+        $tulos = $kysely->fetchObject();
+        if ($tulos == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function lisaaKantaanMaaratyllaAjalla() {
+        $sql = "INSERT INTO Lasku(tilausnro, tyyppi, erapaiva) VALUES(?, ?, ?) RETURNING laskunro";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        echo $this->erapaiva . " ";
+        echo strtotime($this->erapaiva) . " ";
+        $erapaiva = date("Y-m-d", (strtotime($this->erapaiva) + 86400));
+        echo $this->getTilausnro() . " ";
+        echo $this->getTyyppi() . " ";
+        echo $erapaiva . " ";
+        $ok = $kysely->execute(array($this->getTilausnro(), $this->getTyyppi(), $erapaiva));
+        if ($ok) {
+            $this->laskunro = $kysely->fetchColumn();
+        }
+        return $ok;
+    }
+
+    public function lisaaKantaanNykyisellaAjalla() {
+        $sql = "INSERT INTO Lasku(tilausnro, tyyppi, erapaiva) VALUES(?, ?, (current_date + interval '1 day')) RETURNING laskunro";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $ok = $kysely->execute(array($this->getTilausnro(), $this->getTyyppi()));
+        if ($ok) {
+            $this->laskunro = $kysely->fetchColumn();
+        }
+        return $ok;
+    }
+
+    public static function laskujenLukumaara() {
+        $sql = "SELECT count(*) FROM lasku";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute();
+        return $kysely->fetchColumn();
+    }
+
+    public static function getLaskutTiettyMaaraKohdasta($maara, $kohta) {
+        $sql = "SELECT laskunro, tilausnro, tyyppi, erapaiva FROM Lasku ORDER BY laskunro ASC LIMIT ? OFFSET ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($maara, $kohta));
+        $tulokset = array();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $lasku = new Lasku();
+            $lasku->setLaskunro($tulos->laskunro);
+            $lasku->setTilausnro($tulos->tilausnro);
+            $lasku->setTyyppi($tulos->tyyppi);
+            $lasku->setErapaiva($tulos->erapaiva);
+
+            $tulokset[] = $lasku;
+        }
+        return $tulokset;
+    }
+
+    public static function maksamattomiaKarhujaMaaraAsiakasnrolla($asiakasnro) {
+        $sql = "SELECT count(A.laskunro) FROM Lasku A, Tilaus B where A.tilausnro = B.tilausnro and B.asiakasnro = ? and B.maksettu not like 'Kyllä' and A.tyyppi = 'Karhu1'";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($asiakasnro));
+        $tulos = $kysely->fetchColumn();
+        return $tulos;
+    }
+
+    public static function paivitaMaksamattomatLaskut() {
+        //Hakee kaikki lasku tyypin laskunrot joiden eräpaiva on ylitetty ja joiden tilausnrolla ei ole viela karhu1 tai karhu2 tyypin laskua
+        $sql = "SELECT A.laskunro FROM Lasku A, Tilaus B where A.tilausnro = B.tilausnro and B.tilausnro not in (select distinct tilausnro FROM Lasku where tyyppi = 'Karhu1' or tyyppi = 'Karhu2') and B.maksettu not like 'Kyllä' and A.tyyppi = 'Lasku' and A.erapaiva < current_date ORDER BY A.laskunro ASC";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $lasku = Lasku::getLaskuNumerolla($tulos->laskunro);
+            $karhu1 = new Lasku($lasku->getLaskunro(), $lasku->getTilausnro(), "Karhu1", $lasku->getErapaiva());
+            $karhu1->lisaaKantaanMaaratyllaAjalla();
+        }
+    }
+
+    public static function paivitaMaksamattomatKarhut() {
+        //Hakee kaikki karhu1 tyypin laskunrot joiden eräpaiva on ylitetty ja joiden tilausnrolla ei ole viela karhu2 tyypin laskua
+        $sql = "SELECT A.laskunro FROM Lasku A, Tilaus B where A.tilausnro = B.tilausnro and B.tilausnro not in (select distinct tilausnro FROM Lasku where tyyppi = 'Karhu2') and B.maksettu not like 'Kyllä' and A.tyyppi = 'Karhu1' and A.erapaiva < current_date ORDER BY A.laskunro ASC";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {            
+            $lasku = Lasku::getLaskuNumerolla($tulos->laskunro);
+            $karhu2 = new Lasku($lasku->getLaskunro(), $lasku->getTilausnro(), "Karhu2", $lasku->getErapaiva());
+            $karhu2->lisaaKantaanMaaratyllaAjalla();
+        }
+    }
+    
+    public static function paivitaAsiakkaanMaksamattomatLaskut($asiakasnro) {
+        //Hakee lasku tyypin laskunrot jotka kuuluvat asiakkaalle, eräpaiva on ylitetty ja joiden tilausnrolla ei ole viela karhu1 tai karhu2 tyypin laskua
+        $sql = "SELECT A.laskunro FROM Lasku A, Tilaus B where A.tilausnro = B.tilausnro and B.asiakasnro = ? and B.tilausnro not in (select distinct tilausnro FROM Lasku where tyyppi = 'Karhu1' or tyyppi = 'Karhu2') and B.maksettu not like 'Kyllä' and A.tyyppi = 'Lasku' and A.erapaiva < current_date ORDER BY A.laskunro ASC";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($asiakasnro));
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $lasku = Lasku::getLaskuNumerolla($tulos->laskunro);
+            $karhu1 = new Lasku($lasku->getLaskunro(), $lasku->getTilausnro(), "Karhu1", $lasku->getErapaiva());
+            $karhu1->lisaaKantaanMaaratyllaAjalla();
+        }
+    }
+    
+    public static function paivitaAsiakkaanMaksamattomatKarhut($asiakasnro) {
+        //Hakee karhu1 tyypin laskunrot jotka kuuluvat asiakkaalle, eräpaiva on ylitetty ja joiden tilausnrolla ei ole viela karhu2 tyypin laskua
+        $sql = "SELECT A.laskunro FROM Lasku A, Tilaus B where A.tilausnro = B.tilausnro and B.asiakasnro = ? and B.tilausnro not in (select distinct tilausnro FROM Lasku where tyyppi = 'Karhu2') and B.maksettu not like 'Kyllä' and A.tyyppi = 'Karhu1' and A.erapaiva < current_date ORDER BY A.laskunro ASC";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($asiakasnro));
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {            
+            $lasku = Lasku::getLaskuNumerolla($tulos->laskunro);
+            $karhu2 = new Lasku($lasku->getLaskunro(), $lasku->getTilausnro(), "Karhu2", $lasku->getErapaiva());
+            $karhu2->lisaaKantaanMaaratyllaAjalla();
+        }
     }
 
 }

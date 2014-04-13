@@ -32,6 +32,8 @@ if ($ikkuna === 'varasto' && kirjautunutYllapitaja()) {
     $sivu = 'etusivu.php';
 } else if ($ikkuna === 'tiedot' && kirjautunutAsiakas()) {
     $sivu = 'tiedot.php';
+} else if ($ikkuna === 'muokkaatietojani' && kirjautunutAsiakas()) {
+    $sivu = 'muokkaatietojani.php';
 } else if ($ikkuna === 'laskut' && kirjautunutAsiakas()) {
     $sivu = 'laskuni.php';
 } else if ($ikkuna === 'tilaukset' && kirjautunutAsiakas()) {
@@ -40,6 +42,8 @@ if ($ikkuna === 'varasto' && kirjautunutYllapitaja()) {
     $sivu = 'tarkempiatilaustietoja.php';
 } else if ($ikkuna === 'nykyinentilaus' && kirjautunutAsiakas()) {
     $sivu = 'nykyinentilaus.php';
+} else if ($ikkuna === 'tilaa' && kirjautunutAsiakas()) {
+    $sivu = 'tilaa.php';
 } else if ($ikkuna === 'tuoteryhmat' && !kirjautunutYllapitaja()) {
     $sivu = 'tuoteryhmalista.php';
 } else {

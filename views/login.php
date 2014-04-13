@@ -8,7 +8,6 @@
         <meta name="viewport" content="width=device-width">
     </head>
     <body>
-
         <div class="container">  
             <h1>Tukkuliike Tukti</h1>
             <div class="col-md-offset-2">

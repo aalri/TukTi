@@ -7,7 +7,12 @@ if ($data->asiakas !== null) {
     <p>
         Tarjoamme kaikkea toimistotavaroista kalusteisiin.
     </p>
-<?php }else if ($data->yllapitaja !== null) {    
+    <?php if ($data->karhut > 0) { ?>
+        <div class="alert alert-danger">
+            Sinulla on <?php echo $data->karhut; ?> maksamatonta tilausta karhulla!
+        </div>
+    <?php } ?>
+    <?php } else if ($data->yllapitaja !== null) {
     ?>
     <h2>Tervetuloa takaisin Ylläpitäjä <?php echo $data->yllapitaja; ?>.</h2>
     <p>

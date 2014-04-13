@@ -105,5 +105,17 @@ class Tilausrivi {
             return true;
         }
     }
+    
+    public static function luoKantaanUusitilausrivi($tilausnro, $tuotenro, $lkm, $ostohetkenkplhinta) {
+        $sql = "INSERT INTO Tilausrivi(tilausnro, tuotenro, lkm, ostohetkenkplhinta) VALUES(?,?,?,?) RETURNING tilausnro";
+        $kysely = getTietokantayhteys()->prepare($sql);        
+        $kysely->execute(array($tilausnro, $tuotenro, $lkm, $ostohetkenkplhinta));
+        $tilausnro = $kysely->fetchObject();
+        if ($tilausnro == null) {
+            return null;
+        } else {
+            return $tilausnro;
+        }
+    }
 
 }
