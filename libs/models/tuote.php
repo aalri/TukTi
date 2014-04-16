@@ -121,8 +121,8 @@ class Tuote {
             $tuote->setTiedot($tulos->tiedot);
             $tuote->setHinta($tulos->hinta);
             $tuote->setJaljella($tulos->jaljella);
-            $tuote->setlisayskynnys($tulos->lisayskynnys);
-            $tuote->setlisaysmaara($tulos->lisaysmaara);
+            $tuote->setLisayskynnys($tulos->lisayskynnys);
+            $tuote->setLisaysmaara($tulos->lisaysmaara);
             $tuote->setPoistettu($tulos->poistettu);
 
             $tulokset[] = $tuote;
@@ -142,8 +142,8 @@ class Tuote {
             $tuote->setTiedot($tulos->tiedot);
             $tuote->setHinta($tulos->hinta);
             $tuote->setJaljella($tulos->jaljella);
-            $tuote->setlisayskynnys($tulos->lisayskynnys);
-            $tuote->setlisaysmaara($tulos->lisaysmaara);
+            $tuote->setLisayskynnys($tulos->lisayskynnys);
+            $tuote->setLisaysmaara($tulos->lisaysmaara);
             $tuote->setPoistettu($tulos->poistettu);
 
             $tulokset[] = $tuote;
@@ -175,8 +175,8 @@ class Tuote {
             $tuote->setTiedot($tulos->tiedot);
             $tuote->setHinta($tulos->hinta);
             $tuote->setJaljella($tulos->jaljella);
-            $tuote->setlisayskynnys($tulos->lisayskynnys);
-            $tuote->setlisaysmaara($tulos->lisaysmaara);
+            $tuote->setLisayskynnys($tulos->lisayskynnys);
+            $tuote->setLisaysmaara($tulos->lisaysmaara);
             $tuote->setPoistettu($tulos->poistettu);
             $sql = "SELECT tuotenro, tuoteryhmanro FROM Kuuluuryhmiin where tuotenro = ? and tuoteryhmanro = ? LIMIT 1";
             $kysely = getTietokantayhteys()->prepare($sql);
@@ -204,8 +204,8 @@ class Tuote {
             $tuote->setTiedot($tulos->tiedot);
             $tuote->setHinta($tulos->hinta);
             $tuote->setJaljella($tulos->jaljella);
-            $tuote->setlisayskynnys($tulos->lisayskynnys);
-            $tuote->setlisaysmaara($tulos->lisaysmaara);
+            $tuote->setLisayskynnys($tulos->lisayskynnys);
+            $tuote->setLisaysmaara($tulos->lisaysmaara);
             $tuote->setPoistettu($tulos->poistettu);
             return $tuote;
         }
@@ -286,8 +286,8 @@ class Tuote {
             $tuote->setTiedot($tulos->tiedot);
             $tuote->setHinta($tulos->hinta);
             $tuote->setJaljella($tulos->jaljella);
-            $tuote->setlisayskynnys($tulos->lisayskynnys);
-            $tuote->setlisaysmaara($tulos->lisaysmaara);
+            $tuote->setLisayskynnys($tulos->lisayskynnys);
+            $tuote->setLisaysmaara($tulos->lisaysmaara);
             $tuote->setPoistettu($tulos->poistettu);
 
             $tulokset[] = $tuote;
@@ -307,8 +307,8 @@ class Tuote {
             $tuote->setTiedot($tulos->tiedot);
             $tuote->setHinta($tulos->hinta);
             $tuote->setJaljella($tulos->jaljella);
-            $tuote->setlisayskynnys($tulos->lisayskynnys);
-            $tuote->setlisaysmaara($tulos->lisaysmaara);
+            $tuote->setLisayskynnys($tulos->lisayskynnys);
+            $tuote->setLisaysmaara($tulos->lisaysmaara);
             $tuote->setPoistettu($tulos->poistettu);
 
             $tulokset[] = $tuote;
@@ -354,6 +354,27 @@ class Tuote {
             $kysely = getTietokantayhteys()->prepare($sql);
             $kysely->execute(array(($jaljella->jaljella - $tulos->lkm), $tulos->tuotenro));
         }
+    }
+    
+    public static function getTuotteetMaaraAliKynnyksenTiettyMaaraKohdasta($maara, $kohta) {
+        $sql = "SELECT tuotenro, nimi, tiedot, hinta, jaljella, lisayskynnys, lisaysmaara, poistettu FROM Tuote WHERE not poistettu = 'Kyllä' and jaljella < lisayskynnys ORDER BY tuotenro LIMIT ? OFFSET ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($maara, $kohta));
+        $tulokset = array();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $tuote = new Tuote();
+            $tuote->setTuotenro($tulos->tuotenro);
+            $tuote->setNimi($tulos->nimi);
+            $tuote->setTiedot($tulos->tiedot);
+            $tuote->setHinta($tulos->hinta);
+            $tuote->setJaljella($tulos->jaljella);
+            $tuote->setLisayskynnys($tulos->lisayskynnys);
+            $tuote->setLisaysmaara($tulos->lisaysmaara);
+            $tuote->setPoistettu($tulos->poistettu);
+
+            $tulokset[] = $tuote;
+        }
+        return $tulokset;
     }
 
 }

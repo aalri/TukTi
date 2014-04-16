@@ -90,7 +90,7 @@ class Lasku {
     }
 
     public static function onMaksamattomiaKarhujaAsiakasnrolla($asiakasnro) {
-        $sql = "SELECT A.laskunro, A.tilausnro, A.tyyppi, A.erapaiva FROM Lasku A, Tilaus B where A.tilausnro = B.tilausnro and B.asiakasnro = ? and B.maksettu not like 'Kylla' and A.tyyppi = 'Karhu1' LIMIT 1";
+        $sql = "SELECT A.laskunro, A.tilausnro, A.tyyppi, A.erapaiva FROM Lasku A, Tilaus B where A.tilausnro = B.tilausnro and B.asiakasnro = ? and B.maksettu not like 'Kyllä' and A.tyyppi = 'Karhu1' LIMIT 1";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($asiakasnro));
         $tulos = $kysely->fetchObject();
@@ -133,11 +133,35 @@ class Lasku {
         $kysely->execute();
         return $kysely->fetchColumn();
     }
+    
+    public static function asiakkaanLaskujenLukumaara($asiakasnro) {
+        $sql = "SELECT count(A.*) FROM lasku A, tilaus B WHERE A.tilausnro = B.tilausnro and B.asiakasnro = ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($asiakasnro));
+        return $kysely->fetchColumn();
+    }
 
     public static function getLaskutTiettyMaaraKohdasta($maara, $kohta) {
         $sql = "SELECT laskunro, tilausnro, tyyppi, erapaiva FROM Lasku ORDER BY laskunro ASC LIMIT ? OFFSET ?";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($maara, $kohta));
+        $tulokset = array();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $lasku = new Lasku();
+            $lasku->setLaskunro($tulos->laskunro);
+            $lasku->setTilausnro($tulos->tilausnro);
+            $lasku->setTyyppi($tulos->tyyppi);
+            $lasku->setErapaiva($tulos->erapaiva);
+
+            $tulokset[] = $lasku;
+        }
+        return $tulokset;
+    }
+    
+    public static function getLaskutAsiakasnumerollaTiettyMaaraKohdasta($asiakasnro, $maara, $kohta) {
+        $sql = "SELECT A.laskunro, A.tilausnro, A.tyyppi, A.erapaiva FROM Lasku A, Tilaus B where A.tilausnro = B.tilausnro and B.asiakasnro = ? ORDER BY laskunro ASC LIMIT ? OFFSET ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($asiakasnro, $maara, $kohta));
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
             $lasku = new Lasku();

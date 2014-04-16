@@ -26,7 +26,9 @@ if ($ikkuna === 'varasto' && kirjautunutYllapitaja()) {
     $sivu = 'muokkaatuoteryhmaankuuluvattuotteet.php';
 } else if ($ikkuna === 'kaikkitilaukset' && kirjautunutYllapitaja()) {
     $sivu = 'kaikkitilaukset.php';
-} else if ($ikkuna === 'tuoteryhma' && !kirjautunutYllapitaja()) {
+} else if ($ikkuna === 'automaattisetvarastontaydennykset' && kirjautunutYllapitaja()) {
+    $sivu = 'automaattisetvarastontaydennykset.php';
+}  else if ($ikkuna === 'tuoteryhma' && !kirjautunutYllapitaja()) {
     $sivu = 'tuoteryhma.php';
 } else if ($ikkuna === 'etusivu') {
     $sivu = 'etusivu.php';

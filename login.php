@@ -8,7 +8,6 @@ require_once 'libs/models/yllapitaja.php';
 require_once 'libs/models/asiakas.php';
 require_once 'libs/models/nykyinentilaus.php';
 require_once 'libs/yhteydenotto.php';
-require_once 'libs/models/lasku.php';
 
 if (empty($_POST["username"]) && empty($_POST["password"])) {
     /* Käytetään omassa kirjastotiedostossa määriteltyä näkymännäyttöfunktioita */
@@ -21,23 +20,19 @@ $salasana = $_POST["password"];
 $asiakas = Asiakas::etsiKayttajaTunnuksilla($kayttaja, $salasana);
 /* Tarkistetaan onko parametrina saatu oikeat tunnukset */
 if (Yllapitaja::etsiKayttajaTunnuksilla($kayttaja, $salasana) !== null) {
-    $_SESSION['yllapitaja'] = $kayttaja;
-    Lasku::paivitaMaksamattomatLaskut();  
-    Lasku::paivitaMaksamattomatKarhut();
-    header('Location: index.php');
+    $_SESSION['yllapitaja'] = $kayttaja;    
+    header('Location: paivitalaskut.php');
 } else if ($asiakas !== null) {
     $nykyinentilaus = new Nykyinentilaus();
     $_SESSION['nykyinentilaus'] = $nykyinentilaus;
-    $_SESSION['asiakas'] = $asiakas;
-    Lasku::paivitaAsiakkaanMaksamattomatLaskut($asiakas->getAsiakasnro());
-    Lasku::paivitaAsiakkaanMaksamattomatKarhut($asiakas->getAsiakasnro());
-    header('Location: index.php');
+    $_SESSION['asiakas'] = $asiakas;  
+    header('Location: paivitalaskut.php');
 } else if (empty($_POST["username"])) {
     naytaNakyma("login.php", array(
         'virhe' => "Kirjautuminen epäonnistui! Tunnus kenttä on tyhjä.", request
     ));
 } else if (empty($_POST["password"])) {
-    naytaNakyma("login.php", array(
+    naytaNakyma("paivitalaskut.php", array(
         'kayttaja' => $kayttaja,
         'virhe' => "Kirjautuminen epäonnistui! Salasana kenttä on tyhjä.", request
     ));

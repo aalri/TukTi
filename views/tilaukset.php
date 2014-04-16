@@ -1,8 +1,7 @@
-<?php if  ($data->sivuja == 0){ ?>
 <h2>Aikaisemmat tilaukset</h2>
+<?php if  ($data->sivuja == 0){ ?>
 <p>Sinulla ei ole aikaisempia tilauksia</p>
 <?php }else{ ?>
-<h2>Aikaisemmat tilaukset</h2>
 <p>Sivu <?php echo $data->sivu ?>/<?php echo $data->sivuja ?></p>
 <table class="table table-striped">
     <thead>
