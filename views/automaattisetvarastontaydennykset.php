@@ -1,6 +1,7 @@
-<h2>Automaattiset Varastontäydennykset</h2>
+<h2>Automaattiset varastontäydennykset</h2>
 <?php if  ($data->sivuja == 0){ ?>
-<p> Automaattiset Varastontäydennykset on tyhjä. </p>
+<p> Automaattiset varastontäydennykset on tyhjä. </p>
+<p>(Täydennyksiä muodostuu jonkin tuotteen varastomäärän alittaessa lisäyskynnyksen.)</p>
 <?php }else{ ?>
 <p>Sivu <?php echo $data->sivu ?>/<?php echo $data->sivuja ?></p>
 <table class="table table-striped">

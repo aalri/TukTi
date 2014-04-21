@@ -70,7 +70,7 @@ class Asiakas {
         }
         return false;
     }
-    
+
     public function getVirhe() {
         return $this->virhe;
     }
@@ -79,95 +79,41 @@ class Asiakas {
         $this->poistettu = 'Kyllä';
     }
 
-    public static function getAsiakkaat() {
-        $sql = "SELECT asiakasnro, nimi, osoite, tunnus, salasana, poistettu FROM Asiakas ORDER BY asiakasnro ASC";
-        $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute();
-        $tulokset = array();
-        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
-            $asiakas = new Asiakas();
-            $asiakas->setAsiakasnro($tulos->asiakasnro);
-            $asiakas->setNimi($tulos->nimi);
-            $asiakas->setOsoite($tulos->osoite);
-            $asiakas->setTunnus($tulos->tunnus);
-            $asiakas->setSalasana($tulos->salasana);
-            $asiakas->setPoistettu($tulos->poistettu);
-
-            $tulokset[] = $asiakas;
+    public function nimiKelpaa() {
+        if ($this->nimi === "") {
+            $this->virhe .= "Nimi ei saa olla tyhjä. \n";
+            return false;
+        } else if (strlen($this->nimi) > 60) {
+            $this->virhe .= "Nimi on yli 60 merkkiä, mikä on liian pitkä. (määrä: " . strlen($this->nimi) . ") \n";
+            return false;
         }
-        return $tulokset;
+        return true;
     }
 
-    public static function etsiKayttajaTunnuksilla($tunnus, $salasana) {
-        $sql = "SELECT asiakasnro, nimi, osoite, tunnus, salasana, poistettu FROM Asiakas WHERE tunnus = ? AND salasana = ? LIMIT 1";
-        $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute(array($tunnus, $salasana));
-        $tulos = $kysely->fetchObject();
-        if ($tulos == null || $tulos->poistettu == 'Kyllä') {
-            return null;
-        } else {
-            $asiakas = new Asiakas();
-            $asiakas->setAsiakasnro($tulos->asiakasnro);
-            $asiakas->setNimi($tulos->nimi);
-            $asiakas->setOsoite($tulos->osoite);
-            $asiakas->setTunnus($tulos->tunnus);
-            $asiakas->setSalasana($tulos->salasana);
-            $asiakas->setPoistettu($tulos->poistettu);
-
-            return $asiakas;
+    public function osoiteKelpaa() {
+        if ($this->osoite === "") {
+            $this->virhe .= "Osoite ei saa olla tyhjä. \n";
+            return false;
+        } else if (strlen($this->osoite) > 80) {
+            $this->virhe .= "Osoite on yli 80 merkkiä, mikä on liian pitkä. (määrä: " . strlen($this->osoite) . ") \n";
+            return false;
         }
+        return true;
     }
 
-    public static function etsiNumerolla($asiakasnro) {
-        $sql = "SELECT asiakasnro, nimi, osoite, tunnus, salasana, poistettu FROM Asiakas where asiakasnro = ? LIMIT 1";
-        $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute(array($asiakasnro));
-        $tulos = $kysely->fetchObject();
-        if ($tulos == null) {
-            return null;
-        } else {
-            $asiakas = new Asiakas();
-            $asiakas->setAsiakasnro($tulos->asiakasnro);
-            $asiakas->setNimi($tulos->nimi);
-            $asiakas->setOsoite($tulos->osoite);
-            $asiakas->setTunnus($tulos->tunnus);
-            $asiakas->setSalasana($tulos->salasana);
-            $asiakas->setPoistettu($tulos->poistettu);
-            if ($asiakas->getOsoite() === $tulos->osoite) {
-                return $asiakas;
-            }
+    public function salasanaKelpaa() {
+        if (strlen($this->salasana) < 6) {
+            $this->virhe .= "Salasanan pitää olla vähintään 6 merkkiä. (määrä: " . strlen($this->salasana) . ")\n";
+            return false;
+        } else if (strlen($this->salasana) > 20) {
+            $this->virhe .= "Salasana on yli 20 merkkiä, mikä on liian pitkä. (määrä: " . strlen($this->salasana) . ") \n";
+            return false;
         }
+        return true;
     }
 
-    public static function AsiakkaidenLukumaara() {
-        $sql = "SELECT count(*) FROM asiakas";
-        $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute();
-        return $kysely->fetchColumn();
-    }
-    
-    
-
-    public static function getAsiakkaatTiettyMaaraKohdasta($maara, $kohta) {
-        $sql = "SELECT asiakasnro, nimi, osoite, tunnus, salasana, poistettu FROM Asiakas ORDER BY asiakasnro ASC LIMIT ? OFFSET ?";
-        $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute(array($maara, $kohta));
-        $tulokset = array();
-        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
-            $asiakas = new Asiakas();
-            $asiakas->setAsiakasnro($tulos->asiakasnro);
-            $asiakas->setNimi($tulos->nimi);
-            $asiakas->setOsoite($tulos->osoite);
-            $asiakas->setTunnus($tulos->tunnus);
-            $asiakas->setSalasana($tulos->salasana);
-            $asiakas->setPoistettu($tulos->poistettu);
-
-            $tulokset[] = $asiakas;
-        }
-        return $tulokset;
-    }
-    
-        public function onkoUusiKelvollinen() {
+    //tarkistaa tietojen kelvollisuuden kantaan
+    public function onkoUusiKelvollinen() {
         $this->virhe = "";
         $ok = true;
         if (strlen($this->tunnus) < 6) {
@@ -176,31 +122,23 @@ class Asiakas {
         } else if (strlen($this->tunnus) > 20) {
             $this->virhe .= "Tunnus on yli 20 merkkiä, mikä on liian pitkä. (määrä: " . strlen($this->tunnus) . ") \n";
             $ok = false;
-        }
-        if (strlen($this->salasana) < 6) {
-            $this->virhe .= "Salasanan pitää olla vähintään 6 merkkiä. (määrä: " . strlen($this->salasana) . ")\n";
-            $ok = false;
-        } else if (strlen($this->salasana) > 20) {
-            $this->virhe .= "Salasana on yli 20 merkkiä, mikä on liian pitkä. (määrä: " . strlen($this->salasana) . ") \n";
+        } else if (!Asiakas::onkoTunnusVapaa($this->tunnus)) {
+            $this->virhe .= "Tunnus on varattu. \n";
             $ok = false;
         }
-        if ($this->nimi === "") {
-            $this->virhe .= "Nimi ei saa olla tyhjä. \n";
-            $ok = false;
-        } else if (strlen($this->nimi) > 60) {
-            $this->virhe .= "Nimi on yli 60 merkkiä, mikä on liian pitkä. (määrä: " . strlen($this->nimi) . ") \n";
+        if (!$this->salasanaKelpaa()) {
             $ok = false;
         }
-        if ($this->osoite === "") {
-            $this->virhe .= "Osoite ei saa olla tyhjä. \n";
+        if (!$this->nimiKelpaa()) {
             $ok = false;
-        } else if (strlen($this->osoite) > 80) {
-            $this->virhe .= "Osoite on yli 80 merkkiä, mikä on liian pitkä. (määrä: " . strlen($this->osoite) . ") \n";
+        }
+        if (!$this->osoiteKelpaa()) {
             $ok = false;
         }
         return $ok;
     }
-
+    
+    //tarkistaa päivitysten kelvollisuuden kantaan
     public function onkoKelvollinen() {
         $this->virhe = "";
         $ok = true;
@@ -208,29 +146,88 @@ class Asiakas {
             $this->virhe .= "Asiakasnro vioittunut. \n";
             $ok = false;
         }
-        if ($this->nimi === "") {
-            $this->virhe .= "Nimi ei saa olla tyhjä. \n";
-            $ok = false;
-        } else if (strlen($this->nimi) > 60) {
-            $this->virhe .= "Nimi on yli 60 merkkiä, mikä on liian pitkä. (määrä: " . strlen($this->nimi) . ") \n";
+        if (!$this->nimiKelpaa()) {
             $ok = false;
         }
-        if ($this->osoite === "") {
-            $this->virhe .= "Osoite ei saa olla tyhjä. \n";
+        if (!$this->osoiteKelpaa()) {
             $ok = false;
-        } else if (strlen($this->osoite) > 80) {
-            $this->virhe .= "Osoite on yli 80 merkkiä, mikä on liian pitkä. (määrä: " . strlen($this->osoite) . ") \n";
+        }
+        if (!$this->salasanaKelpaa()) {
             $ok = false;
         }
         return $ok;
     }
-    
-     public function paivitaKantaan() {
-        $sql = "UPDATE Asiakas SET nimi = ?, osoite = ? WHERE asiakasnro = ?";        
+
+    //tarkistaa ettei kanta sisällä Asiakasta tunnuksella
+    public static function onkoTunnusVapaa($tunnus) {
+        $sql = "SELECT asiakasnro FROM Asiakas where tunnus = ? LIMIT 1";
         $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute(array($this->nimi, $this->osoite, $this->asiakasnro));
+        $kysely->execute(array($tunnus));
+        $tulos = $kysely->fetchObject();
+        if ($tulos == null) {
+            return true;
+        } else {
+            return false;
+        }
     }
-    
+
+    //palauttaa asiakkaan kannasta, jolla on salasana ja tunnus, ja ei ole poistettu
+    public static function etsiKayttajaTunnuksilla($tunnus, $salasana) {
+        $sql = "SELECT asiakasnro, nimi, osoite, tunnus, salasana, poistettu FROM Asiakas WHERE tunnus = ? AND salasana = ? AND not poistettu = 'Kyllä LIMIT 1";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($tunnus, $salasana));
+        $tulos = $kysely->fetchObject();
+        if ($tulos == null) {
+            return null;
+        } else {
+            $asiakas = new Asiakas($tulos->asiakasnro, $tulos->nimi, $tulos->osoite, $tulos->tunnus, $tulos->salasana, $tulos->poistettu);
+            return $asiakas;
+        }
+    }
+
+    //palauttaa asiakkaan kannasta, jolla asiakasnro, ja ei ole poistettu
+    public static function etsiNumerolla($asiakasnro) {
+        $sql = "SELECT asiakasnro, nimi, osoite, tunnus, salasana, poistettu FROM Asiakas where asiakasnro = ? and not poistettu = 'Kyllä' LIMIT 1";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($asiakasnro));
+        $tulos = $kysely->fetchObject();
+        if ($tulos == null) {
+            return null;
+        } else {
+            $asiakas = new Asiakas($tulos->asiakasnro, $tulos->nimi, $tulos->osoite, $tulos->tunnus, $tulos->salasana, $tulos->poistettu);
+            return $asiakas;
+        }
+    }
+
+    //palauttaa kannasta asiakkaiden lukumäärän
+    public static function AsiakkaidenLukumaara() {
+        $sql = "SELECT count(*) FROM asiakas";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute();
+        return $kysely->fetchColumn();
+    }
+
+    //palauttaa kannasta tietyn määrän asiakkaita tietystä kohdasta
+    public static function getAsiakkaatTiettyMaaraKohdasta($maara, $kohta) {
+        $sql = "SELECT asiakasnro, nimi, osoite, tunnus, salasana, poistettu FROM Asiakas ORDER BY asiakasnro ASC LIMIT ? OFFSET ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($maara, $kohta));
+        $tulokset = array();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $asiakas = new Asiakas($tulos->asiakasnro, $tulos->nimi, $tulos->osoite, $tulos->tunnus, $tulos->salasana, $tulos->poistettu);
+            $tulokset[] = $asiakas;
+        }
+        return $tulokset;
+    }
+
+    //päivittää kantaan asiakkaan tiedot numerolla
+    public function paivitaKantaan() {
+        $sql = "UPDATE Asiakas SET nimi = ?, osoite = ?, poistettu = ? WHERE asiakasnro = ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($this->nimi, $this->osoite, $this->poistettu, $this->asiakasnro));
+    }
+
+    //lisää uuden asiakkaan tiedot kantaan ja luo numeron
     public function lisaaKantaan() {
         $sql = "INSERT INTO Asiakas(nimi, osoite, tunnus, salasana, poistettu) VALUES(?, ?, ?, ?, 'Ei') RETURNING asiakasnro";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -239,6 +236,13 @@ class Asiakas {
             $this->asiakasnro = $kysely->fetchColumn();
         }
         return $ok;
+    }
+
+    //poistaa kannasta asiakkaan tiedot numerolla
+    public function poistaKannasta() {
+        $sql = "DELETE FROM Asiakas WHERE asiakasnro = ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($this->getAsiakasnro()));
     }
 
 }

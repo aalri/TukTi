@@ -14,7 +14,7 @@ if (empty($_POST['tallennettumuutokset'])) {
     ));
     exit();
 }
-$uusituote = new Tuote($tuotenro, $_POST['nimi'], $_POST['tietoja'], $_POST['hinta'], $_POST['maara'], $_POST['lisayskynnys'], $_POST['lisaysmaara'], "Ei");
+$uusituote = new Tuote($tuotenro, $_POST['nimi'], $_POST['hinta'], $_POST['maara'], $_POST['lisayskynnys'], $_POST['lisaysmaara'], "Ei");
 if ($uusituote->onkoKelvollinen()) {
     $uusituote->paivitaKantaan();
     $_SESSION['ilmoitus'] = "Tuotteen vanhat tiedot: (" . $tuote->getNimi() . "," . $tuote->getJaljella() . "," . $tuote->getHinta() . "," . $tuote->getLisayskynnys() . "," . $tuote->getLisaysmaara() . ") muutettu uudeksi: (" . $uusituote->getNimi() . "," . $uusituote->getJaljella() . "," . $uusituote->getHinta() . "," . $uusituote->getLisayskynnys() . "," . $uusituote->getLisaysmaara() . ") onnistuneesti tuotenumerolla: '" . $uusituote->getTuotenro() . "'.";

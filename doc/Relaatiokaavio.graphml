@@ -102,7 +102,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="153.21361437125745" width="190.88000000000005" x="314.4599999999998" y="193.52673202371693"/>
+          <y:Geometry height="137.21361437125745" width="190.88000000000005" x="314.4599999999998" y="197.5219374801145"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="39.3818359375" x="75.74908203125003" y="3.0">Tuote<y:LabelModel>
@@ -115,7 +115,6 @@
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel>&lt;&lt; key, fkey &gt;&gt;-tuotenro:int
 -nimi:String
--tiedot:String
 -hinta:decimal
 -jaljella:int
 -lisayskynnys:int
@@ -247,7 +246,7 @@ salasana:String</y:AttributeLabel>
     <edge id="e2" source="n2" target="n3">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="-30.040882150818565" sy="-11.178584665743244" tx="0.882570596407902" ty="-35.00830707513629">
+          <y:Path sx="-30.040882150818565" sy="-11.178584665743244" tx="0.882570596407902" ty="-31.352411902237993">
             <y:Point x="542.0876812500039" y="254.95015999999998"/>
             <y:Point x="542.0876812500039" y="235.1252321342094"/>
           </y:Path>
@@ -273,7 +272,7 @@ salasana:String</y:AttributeLabel>
     <edge id="e4" source="n5" target="n3">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="110.009765625" sy="0.0" tx="-26.18190168143667" ty="-38.5744759374893">
+          <y:Path sx="110.009765625" sy="0.0" tx="-26.18190168143667" ty="-34.54616802547639">
             <y:Point x="294.656" y="256.64879999999994"/>
             <y:Point x="294.656" y="231.55906327185636"/>
           </y:Path>

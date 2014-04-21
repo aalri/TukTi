@@ -30,12 +30,13 @@
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <button type="submit" class="btn btn-default">Kirjaudu sisään</button>
+                        <a href="index.php" class="btn btn-xs btn-default" role="button"> Palaa</a>
                     </div>
-                </div>
-            </form>
+                </div>                
+            </form>            
             <?php if (!empty($data->virhe)): ?>
                 <div class="alert alert-danger"><?php echo $data->virhe; ?></div>
             <?php endif; ?>
-        </div>
+        </div>        
     </body>
 </html>

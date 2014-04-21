@@ -2,7 +2,7 @@
 require_once 'libs/yhteydenotto.php';
 require_once 'libs/models/tuote.php';
 $rivimaara = 5;
-$lkm = Tuote::lukumaara();
+$lkm = Tuote::lukumaaraAliKynnyksen();
 $sivuja = ceil($lkm / $rivimaara);
 $sivu = annaNykyinenSivu($sivuja);
 if (!empty($_POST['kirjaatoimitus'])){

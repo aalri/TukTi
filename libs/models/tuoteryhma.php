@@ -28,6 +28,7 @@ class Tuoteryhma {
         return htmlspecialchars($this->nimi);
     }
 
+    //palauttaa kannasta kaikki tuoteryhmät
     public static function getTuoteryhmat() {
         $sql = "SELECT tuoteryhmanro, nimi FROM Tuoteryhma ORDER BY tuoteryhmanro ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -42,11 +43,12 @@ class Tuoteryhma {
         }
         return $tulokset;
     }
-    
-    public static function getTuoteryhmatTiettyMaaraKohdasta($maara, $kohta) {        
+
+    //palauttaa kannasta tietyn määrän tuoteryhmiä tietystä kohdasta
+    public static function getTuoteryhmatTiettyMaaraKohdasta($maara, $kohta) {
         $sql = "SELECT tuoteryhmanro, nimi FROM Tuoteryhma ORDER BY tuoteryhmanro ASC LIMIT ? OFFSET ?";
-        $kysely = getTietokantayhteys()->prepare($sql);        
-        $kysely->execute(array($maara, $kohta)); 
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($maara, $kohta));
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
             $tuoteryhma = new Tuoteryhma();
@@ -58,6 +60,7 @@ class Tuoteryhma {
         return $tulokset;
     }
 
+    //palauttaa kannasta tuoteryhmän tuoteryhmänumerolla
     public static function etsiNumerolla($tuoteryhmanro) {
         $sql = "SELECT tuoteryhmanro, nimi FROM Tuoteryhma where tuoteryhmanro = ? LIMIT 1";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -74,18 +77,18 @@ class Tuoteryhma {
         }
     }
 
+    //luo kantaan uuden tuoteryhmän nimellä, ja luo sille tuoteryhmänumeron
     public function lisaaKantaan() {
         $sql = "INSERT INTO Tuoteryhma(nimi) VALUES(?) RETURNING tuoteryhmanro";
         $kysely = getTietokantayhteys()->prepare($sql);
         $ok = $kysely->execute(array($this->nimi));
         if ($ok) {
-            //Haetaan RETURNING-määreen palauttama id.
-            //HUOM! Tämä toimii ainoastaan PostgreSQL-kannalla!
             $this->tuoteryhmanro = $kysely->fetchColumn();
         }
         return $ok;
     }
 
+    // tarkistaa onko tuoteryhmän nimi kelvollinen kantaan
     public function onkoKelvollinen() {
         $ok = true;
         $this->virhe = "";
@@ -103,18 +106,21 @@ class Tuoteryhma {
         return $this->virhe;
     }
 
+    //päivittää kantaan tuoteryhmän nimen tuoteryhmänumerolla
     public function paivitaKantaan() {
         $sql = "UPDATE Tuoteryhma SET nimi = ? WHERE tuoteryhmanro = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($this->nimi, $this->getTuoteryhmanro()));
     }
 
+    //poistaa kannasta tuoteryhmänumerolla
     public static function poista($tuoteryhmanro) {
         $sql = "DELETE FROM Tuoteryhma WHERE tuoteryhmanro = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($tuoteryhmanro));
     }
-    
+
+    //palauttaa kannasta tuoteryhmien lukumäärän
     public static function lukumaara() {
         $sql = "SELECT count(*) FROM tuoteryhma";
         $kysely = getTietokantayhteys()->prepare($sql);

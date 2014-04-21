@@ -9,7 +9,6 @@ if (kirjautunutYllapitaja()){
     Lasku::paivitaMaksamattomatKarhut();
 }else if (kirjautunutAsiakas()){
     $asiakas = Asiakastiedot();
-    echo $asiakas->getAsiakasnro();
     Lasku::paivitaAsiakkaanMaksamattomatLaskut($asiakas->getAsiakasnro());
     Lasku::paivitaAsiakkaanMaksamattomatKarhut($asiakas->getAsiakasnro());
 }

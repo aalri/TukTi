@@ -5,34 +5,34 @@ require_once 'libs/models/tilaus.php';
 require_once 'libs/models/lasku.php';
 require_once 'libs/models/tuote.php';
 if (!empty($_POST['toimita'])) {
-    $tilausnro = $_POST['toimita'];
-    if (!Tilaus::onToimitettu($tilausnro)) {
-        if (Tuote::loytyyTuoteMaarat($tilausnro)) {
-            Tilaus::paivitaToimitetuksiKantaan($tilausnro);
-            Tuote::vahennaTuoteMaarat($tilausnro);
+    $tuoteryhmanro = $_POST['toimita'];
+    if (!Tilaus::onToimitettu($tuoteryhmanro)) {
+        if (Tuote::loytyyTuoteMaarat($tuoteryhmanro)) {
+            Tilaus::paivitaToimitetuksiKantaan($tuoteryhmanro);
+            Tuote::vahennaTuoteMaarat($tuoteryhmanro);
             $lasku = new Lasku();
-            $lasku->setTilausnro($tilausnro);
+            $lasku->setTilausnro($tuoteryhmanro);
             $lasku->setTyyppi("Lasku");
             $laskunro = $lasku->lisaaKantaanNykyisellaAjalla();
-            $_SESSION['ilmoitus'] = "Tilaus numerolla: '" . $tilausnro . "' on kirjattu toimitetuksi ja uusi lasku numerolla: '" . $lasku->getLaskunro() . "'";
+            $_SESSION['ilmoitus'] = "Tilaus numerolla: '" . $tuoteryhmanro . "' on kirjattu toimitetuksi ja uusi lasku numerolla: '" . $lasku->getLaskunro() . "'";
             unset($_POST['toimita']);
             header('Location: index.php?ikkuna=kaikkitilaukset');
         } else {
-            $_SESSION['varoitus'] = "Tilausta numerolla: '" . $tilausnro . "' ei voida toimittaa tavarapulan takia!";
+            $_SESSION['varoitus'] = "Tilausta numerolla: '" . $tuoteryhmanro . "' ei voida toimittaa tavarapulan takia!";
             unset($_POST['toimita']);
             header('Location: index.php?ikkuna=kaikkitilaukset');
         }
     } else {
-        $_SESSION['varoitus'] = "Tilaus numerolla: '" . $tilausnro . "' on jo toimitettu!";
+        $_SESSION['varoitus'] = "Tilaus numerolla: '" . $tuoteryhmanro . "' on jo toimitettu!";
         unset($_POST['toimita']);
         header('Location: index.php?ikkuna=kaikkitilaukset');
     }
 }
 if (!empty($_POST['maksettu'])) {
-    $tilausnro = $_POST['maksettu'];
-    if (Tilaus::onToimitettu($tilausnro)) {
-        Tilaus::paivitaMaksetuksiKantaan($tilausnro);
-        $_SESSION['ilmoitus'] = "Tilaus numerolla: '" . $tilausnro . "' on kirjattu maksetuksi";
+    $tuoteryhmanro = $_POST['maksettu'];
+    if (Tilaus::onToimitettu($tuoteryhmanro)) {
+        Tilaus::paivitaMaksetuksiKantaan($tuoteryhmanro);
+        $_SESSION['ilmoitus'] = "Tilaus numerolla: '" . $tuoteryhmanro . "' on kirjattu maksetuksi";
         unset($_POST['maksettu']);
         header('Location: index.php?ikkuna=kaikkitilaukset');
     } else {

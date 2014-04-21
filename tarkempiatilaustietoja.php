@@ -1,20 +1,23 @@
 <?php
-
 require_once 'libs/yhteydenotto.php';
+require_once 'libs/common.php';
 require_once 'libs/models/tilaus.php';
 require_once 'libs/models/tilausrivi.php';
 require_once 'libs/models/tuote.php';
-if (!preg_match('/^\d+$/', $_GET['tilausnro'])) {
+
+$tilausnro = annaKokonaislukuna($_GET['tilausnro']);
+$rivimaara = 5;
+$lkm = Tilausrivi::lukumaaraTilausnumerolla($tilausnro);
+$sivuja = ceil($lkm / $rivimaara);
+$sivu = annaNykyinenSivu($sivuja);
+if (!Tilaus::onTilausNumerolla($tilausnro)) {
     $_SESSION['varoitus'] = "Tilausta ei löytynyt kannasta";
     if (kirjautunutYllapitaja()) {
-        header('Location: index.php?ikkuna=tuoteryhmatjatuotteet');
+        header('Location: index.php?ikkuna=kaikkitilaukset');
     } else {
         header('Location: ?ikkuna=tilaukset');
     }
-} else {
-    $tuoteryhmanro = $_GET['tilausnro'];
 }
-$asiakas = Asiakastiedot();
 if ($_POST['palaa']) {
     if (kirjautunutYllapitaja()) {
         header('Location: ?ikkuna=kaikkitilaukset');
@@ -23,16 +26,14 @@ if ($_POST['palaa']) {
     }
 } else {
     if (kirjautunutYllapitaja()) {
-        $lista = Tilausrivi::getTilausrivitTilausnumerolla($tuoteryhmanro);
-        naytaNakyma("tarkempiatilaustietoja.php", array('lista' => $lista, 'tilausnro' => $tuoteryhmanro));
+        $lista = Tilausrivi::getTilausrivitTilausnumerollaTiettyMaaraKohdasta($tilausnro, $rivimaara, $rivimaara*($sivu-1));
+        naytaNakyma("tarkempiatilaustietoja.php", array('lista' => $lista, 'tilausnro' => $tilausnro, 'sivu' => $sivu, 'sivuja' => $sivuja));
     } else {
-        $asiakasnro = Tilaus::getTilausnumeronAsiakas($tuoteryhmanro);
+        $asiakas = Asiakastiedot();
+        $asiakasnro = Tilaus::getTilausnumeronAsiakas($tilausnro);
         if ($asiakas->getAsiakasnro() === $asiakasnro) {
-            $lista = Tilausrivi::getTilausrivitTilausnumerolla($tuoteryhmanro);
-            naytaNakyma("tarkempiatilaustietoja.php", array('lista' => $lista, 'tilausnro' => $tuoteryhmanro));
-        } else if (kirjautunutYllapitaja()) {
-            $_SESSION['varoitus'] = "Tilausta ei löytynyt kannasta";
-            header('Location: ?ikkuna=kaikkitilaukset');
+            $lista = Tilausrivi::getTilausrivitTilausnumerollaTiettyMaaraKohdasta($tilausnro, $rivimaara, $rivimaara*($sivu-1));            
+            naytaNakyma("tarkempiatilaustietoja.php", array('lista' => $lista, 'tilausnro' => $tilausnro, 'sivu' => $sivu, 'sivuja' => $sivuja));
         } else {
             $_SESSION['varoitus'] = "Tilausta ei löytynyt kannasta";
             header('Location: ?ikkuna=tilaukset');

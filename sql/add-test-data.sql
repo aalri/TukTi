@@ -1,10 +1,10 @@
 INSERT INTO Yllapitaja ( Tunnus, Salasana)
 VALUES ( 'takrot', 'kopp1t4p4');
 
-INSERT INTO Tuote ( Nimi, Tiedot, Hinta, Jaljella, Lisayskynnys, Lisaysmaara, Poistettu)
-VALUES ( 'Pasta Pyyhekumi', 'Laadukas pyyhekumi kirjoitusvirheiden kumittamiseen. \n Ei hajoa käsiin ensimmäisellä kumituskerralla', 0.70, 600, 100, 400, 'Ei'),
-( 'Pasta Lyijykyna', 'Laadukas lyijykynä pidempienkin tekstien kirjoittamiseen.', 0.30, 1200, 200, 800, 'Ei'),
-( 'Jylha Sohva', 'Edistyksellinen sohva toimistoon.', 119.99, 20, 5, 10, 'Ei');
+INSERT INTO Tuote ( Nimi, Hinta, Jaljella, Lisayskynnys, Lisaysmaara, Poistettu)
+VALUES ( 'Pasta Pyyhekumi', 0.70, 600, 100, 400, 'Ei'),
+( 'Pasta Lyijykyna', 0.30, 1200, 200, 800, 'Ei'),
+( 'Jylha Sohva', 119.99, 20, 5, 10, 'Ei');
 
 INSERT INTO Tuoteryhma (Nimi)
 VALUES ( 'Toimistotarvikkeet'),

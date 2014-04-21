@@ -18,12 +18,6 @@
             <input type="text" class="form-control" id="inputName" name="hinta" value="<?php echo $data->tuote->getHinta() ?>">
         </div>
     </div>
-        <div class="form-group">
-        <label for="inputName" class="col-md-2 control-label">Tietoja</label>
-        <div class="col-md-10">
-            <input type="text" class="form-control" id="inputName" name="tietoja" value="<?php echo $data->tuote->getTiedot() ?>">
-        </div>
-    </div>
     <div class="form-group">
         <label for="inputName" class="col-md-2 control-label">Lisäyskynnys</label>
         <div class="col-md-10">

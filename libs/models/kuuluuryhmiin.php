@@ -26,36 +26,33 @@ class Kuuluuryhmiin {
         return $this->tuoteryhmanro;
     }
 
+    //palauttaa kannasta kaikki Kuuluuryhmiin
     public static function getTuotteetkuuluuryhmiin() {
         $sql = "SELECT tuotenro, tuoteryhmanro FROM Kuuluuryhmiin ORDER BY 1 ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute();
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
-            $kuuluuryhmiin = new Kuuluuryhmiin();
-            $kuuluuryhmiin->setTuotenro($tulos->tuotenro);
-            $kuuluuryhmiin->setTuoteryhmanro($tulos->tuoteryhmanro);
-
+            $kuuluuryhmiin = new Kuuluuryhmiin($tulos->tuotenro, $tulos->tuoteryhmanro);
             $tulokset[] = $kuuluuryhmiin;
         }
         return $tulokset;
     }
 
+    //palauttaa kannasta kaikki Kuuluuryhmiin, jotka sisältävät tuoteryhmanumeron
     public static function getTuotteetkuuluuryhmaan($tuoteryhma) {
         $sql = "SELECT tuotenro, tuoteryhmanro FROM Kuuluuryhmiin where tuoteryhmannumero = ? ORDER BY 1 ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array((int) $tuoteryhma));
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
-            $kuuluuryhmiin = new Kuuluuryhmiin();
-            $kuuluuryhmiin->setTuotenro($tulos->tuotenro);
-            $kuuluuryhmiin->setTuoteryhmanro($tulos->tuoteryhmanro);
-
+            $kuuluuryhmiin = new Kuuluuryhmiin($tulos->tuotenro, $tulos->tuoteryhmanro);
             $tulokset[] = $kuuluuryhmiin;
         }
         return $tulokset;
     }
 
+    //luo kantaan uuden Kuuluuryhmiin tuotenumerolla ja tuoteryhmanumerolla
     public function lisaaKantaan() {
         $sql = "INSERT INTO Kuuluuryhmiin(tuotenro, tuoteryhmanro) VALUES(?, ?) RETURNING tuoteryhmanro";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -68,6 +65,7 @@ class Kuuluuryhmiin {
         return $ok;
     }
 
+    //tarkistaa onko tuotenro ja tuoteryhmanro kelvollinen kantaan
     public function onkoKelvollinen() {
         $ok = true;
         if (!preg_match('/^\d+$/', $this->tuotenro)) {
@@ -79,18 +77,21 @@ class Kuuluuryhmiin {
         return $ok;
     }
 
+    //poistaa kannasta Kuuluuryhmiin tuotenumerolla ja tuoteryhmanumerolla
     public static function poista($tuotenro, $tuoteryhmanro) {
         $sql = "DELETE FROM Kuuluuryhmiin WHERE tuotenro = ? and tuoteryhmanro = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($tuotenro, $tuoteryhmanro));
     }
     
+    //poistaa kannasta Kuuluuryhmiin tuotenumerolla
     public static function poistaTuotenro($tuotenro) {
         $sql = "DELETE FROM Kuuluuryhmiin WHERE tuotenro = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($tuotenro));
     }
     
+    //poistaa kannasta Kuuluuryhmiin tuoteryhmanumerolla
     public static function poistaTuoteryhmanro($tuoteryhmanro) {
         $sql = "DELETE FROM Kuuluuryhmiin WHERE tuoteryhmanro = ?";
         $kysely = getTietokantayhteys()->prepare($sql);

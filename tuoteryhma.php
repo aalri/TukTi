@@ -19,7 +19,7 @@ if (empty($_POST["tuotenro"]) || empty($_POST["maara"])) {
     naytaNakyma("tuoteryhma.php", array(
         'tuoteryhma' => $tuoteryhma, 'lista' => $lista, 'sivu' => $sivu, 'sivuja' => $sivuja
     ));
-}else if ((int)$_POST["maara"] <= 0) {
+} else if ((int) $_POST["maara"] <= 0) {
     naytaNakyma("tuoteryhma.php", array(
         'virhe' => "Virhe määrä syötteessä", 'tuoteryhma' => $tuoteryhma, 'lista' => $lista, 'sivu' => $sivu, 'sivuja' => $sivuja
     ));
@@ -33,7 +33,8 @@ if (empty($_POST["tuotenro"]) || empty($_POST["maara"])) {
     unset($_POST["tuotenro"]);
     unset($_POST["maara"]);
     naytaNakyma("tuoteryhma.php", array(
-        'onnistui' => "Tuotetta ".$tuote->getNimi()." lisätty tilaukseen ".$maara." kappaletta." ,'tuoteryhma' => $tuoteryhma, 'lista' => $lista, 'sivu' => $sivu, 'sivuja' => $sivuja
+        'onnistui' => "Tuotetta " . $tuote->getNimi() . " lisätty tilaukseen " . $maara . " kappaletta.", 'tuoteryhma' => $tuoteryhma, 'lista' => $lista, 'sivu' => $sivu, 'sivuja' => $sivuja
     ));
 }
+
 

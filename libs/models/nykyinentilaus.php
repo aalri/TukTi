@@ -18,6 +18,7 @@ class Nykyinentilaus {
         $this->rivit = $rivit;
     }
 
+    //lisää tuotenron uuden rivin listaan, jos sitä ei ole tai päivittää valmista
     public function lisaaTilaukseen($tuotenro, $maara, $kappalehinta) {
         $rivi = $this->rivit[(int)$tuotenro];
         if ($rivi !== null) {
@@ -32,6 +33,7 @@ class Nykyinentilaus {
         unset($this->rivit[$tuotenro]);
     }
     
+    //laskee rivien kappalehinnat yhteen
     public function hintaYhteensa() {
         $yhteensa = 0;        
         foreach($this->rivit as $rivi){
@@ -39,5 +41,4 @@ class Nykyinentilaus {
         }
         return $yhteensa;
     }
-
 }

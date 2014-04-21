@@ -4,7 +4,6 @@ class Tuote {
 
     private $tuotenro;
     private $nimi;
-    private $tiedot;
     private $hinta;
     private $jaljella;
     private $lisayskynnys;
@@ -13,10 +12,9 @@ class Tuote {
     private $kuuluuryhmaan;
     private $virhe;
 
-    public function __construct($tuotenro, $nimi, $tiedot, $hinta, $jaljella, $lisayskynnys, $lisaysmaara, $poistettu) {
+    public function __construct($tuotenro, $nimi, $hinta, $jaljella, $lisayskynnys, $lisaysmaara, $poistettu) {
         $this->tuotenro = $tuotenro;
         $this->nimi = $nimi;
-        $this->tiedot = $tiedot;
         $this->hinta = $hinta;
         $this->jaljella = $jaljella;
         $this->lisayskynnys = $lisayskynnys;
@@ -40,14 +38,6 @@ class Tuote {
 
     public function getNimi() {
         return htmlspecialchars($this->nimi);
-    }
-
-    public function setTiedot($tiedot) {
-        $this->tiedot = $tiedot;
-    }
-
-    public function getTiedot() {
-        return htmlspecialchars($this->tiedot);
     }
 
     public function setHinta($hinta) {
@@ -109,48 +99,35 @@ class Tuote {
         $this->poistettu = "Kyllä";
     }
 
+    //palauttaa kaikki tuotteet kannasta, joita ei ole asetettu poistetuiksi
     public static function getTuotteet() {
-        $sql = "SELECT tuotenro, nimi, tiedot, hinta, jaljella, lisayskynnys, lisaysmaara, poistettu FROM Tuote WHERE not poistettu = 'Kyllä' ORDER BY tuotenro ASC";
+        $sql = "SELECT * FROM Tuote WHERE not poistettu = 'Kyllä' ORDER BY tuotenro ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute();
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
-            $tuote = new Tuote();
-            $tuote->setTuotenro($tulos->tuotenro);
-            $tuote->setNimi($tulos->nimi);
-            $tuote->setTiedot($tulos->tiedot);
-            $tuote->setHinta($tulos->hinta);
-            $tuote->setJaljella($tulos->jaljella);
-            $tuote->setLisayskynnys($tulos->lisayskynnys);
-            $tuote->setLisaysmaara($tulos->lisaysmaara);
-            $tuote->setPoistettu($tulos->poistettu);
+            $tuote = new Tuote($tulos->tuotenro, $tulos->nimi, $tulos->hinta, $tulos->jaljella, $tulos->lisayskynnys, $tulos->lisaysmaara, $tulos->poistettu);
 
             $tulokset[] = $tuote;
         }
         return $tulokset;
     }
-
+    
+    //palauttaa kaikki tuotteet kannasta,jotka kuuluvat tuoteryhmaan, ja joita ei ole asetettu poistetuiksi
     public static function getTuoteryhmaanKuuluvatTuotteet($tuoteryhmanro) {
-        $sql = "SELECT A.tuotenro, A.nimi, A.tiedot, A.hinta, A.jaljella, A.lisayskynnys, A.lisaysmaara, A.poistettu FROM Tuote A, Kuuluuryhmiin B where A.tuotenro = B.tuotenro and B.tuoteryhmanro = ? and not poistettu = 'Kyllä' ORDER BY tuotenro ASC";
+        $sql = "SELECT A.* FROM Tuote A, Kuuluuryhmiin B where A.tuotenro = B.tuotenro and B.tuoteryhmanro = ? and not poistettu = 'Kyllä' ORDER BY tuotenro ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array((int) $tuoteryhmanro));
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
-            $tuote = new Tuote();
-            $tuote->setTuotenro($tulos->tuotenro);
-            $tuote->setNimi($tulos->nimi);
-            $tuote->setTiedot($tulos->tiedot);
-            $tuote->setHinta($tulos->hinta);
-            $tuote->setJaljella($tulos->jaljella);
-            $tuote->setLisayskynnys($tulos->lisayskynnys);
-            $tuote->setLisaysmaara($tulos->lisaysmaara);
-            $tuote->setPoistettu($tulos->poistettu);
+            $tuote = new Tuote($tulos->tuotenro, $tulos->nimi, $tulos->hinta, $tulos->jaljella, $tulos->lisayskynnys, $tulos->lisaysmaara, $tulos->poistettu);
 
             $tulokset[] = $tuote;
         }
         return $tulokset;
     }
 
+    //palauttaa tuotteen nimen kannasta tuotenumerolla
     public static function getTuoteNimiNumerolla($tuotenro) {
         $sql = "SELECT nimi FROM Tuote where tuotenro = ? LIMIT 1";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -163,21 +140,14 @@ class Tuote {
         }
     }
 
-    public static function getTuotteetJaKuuluvuudetTuoteryhmaan($tuoteryhmanro) {
-        $sql = "SELECT tuotenro, nimi, tiedot, hinta, jaljella, lisayskynnys, lisaysmaara, poistettu FROM Tuote WHERE not poistettu = 'Kyllä' ORDER BY tuotenro ASC";
+    //palauttaa tietyn määrän tuotteita tietystä kohdasta kannasta, joita ei ole asetettu poistetuiksi. Myös lisää tiedon, kuuluuko se tuoteryhmään tuoteryhmänumerolla.
+    public static function getTuotteetJaKuuluvuudetTuoteryhmaanTiettyMaaraKohdasta($tuoteryhmanro, $maara, $kohta) {
+        $sql = "SELECT * FROM Tuote WHERE not poistettu = 'Kyllä' ORDER BY tuotenro ASC LIMIT ? OFFSET ?";
         $kysely = getTietokantayhteys()->prepare($sql);        
-        $kysely->execute();     
+        $kysely->execute(array($maara, $kohta));     
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
-            $tuote = new Tuote();
-            $tuote->setTuotenro($tulos->tuotenro);
-            $tuote->setNimi($tulos->nimi);
-            $tuote->setTiedot($tulos->tiedot);
-            $tuote->setHinta($tulos->hinta);
-            $tuote->setJaljella($tulos->jaljella);
-            $tuote->setLisayskynnys($tulos->lisayskynnys);
-            $tuote->setLisaysmaara($tulos->lisaysmaara);
-            $tuote->setPoistettu($tulos->poistettu);
+            $tuote = new Tuote($tulos->tuotenro, $tulos->nimi, $tulos->hinta, $tulos->jaljella, $tulos->lisayskynnys, $tulos->lisaysmaara, $tulos->poistettu);
             $sql = "SELECT tuotenro, tuoteryhmanro FROM Kuuluuryhmiin where tuotenro = ? and tuoteryhmanro = ? LIMIT 1";
             $kysely = getTietokantayhteys()->prepare($sql);
             $kysely->execute(array($tulos->tuotenro, $tuoteryhmanro));
@@ -190,27 +160,21 @@ class Tuote {
         return $tulokset;
     }
 
+    //palauttaa tuotteen kannasta tuotenumerolla
     public static function etsiNumerolla($tuotenro) {
-        $sql = "SELECT tuotenro, nimi, tiedot, hinta, jaljella, lisayskynnys, lisaysmaara, poistettu FROM Tuote where tuotenro = ? LIMIT 1";
+        $sql = "SELECT * FROM Tuote where tuotenro = ? and not poistettu = 'Kyllä' LIMIT 1";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($tuotenro));
         $tulos = $kysely->fetchObject();
         if ($tulos == null) {
             return null;
         } else {
-            $tuote = new Tuote();
-            $tuote->setTuotenro($tulos->tuotenro);
-            $tuote->setNimi($tulos->nimi);
-            $tuote->setTiedot($tulos->tiedot);
-            $tuote->setHinta($tulos->hinta);
-            $tuote->setJaljella($tulos->jaljella);
-            $tuote->setLisayskynnys($tulos->lisayskynnys);
-            $tuote->setLisaysmaara($tulos->lisaysmaara);
-            $tuote->setPoistettu($tulos->poistettu);
+            $tuote = new Tuote($tulos->tuotenro, $tulos->nimi, $tulos->hinta, $tulos->jaljella, $tulos->lisayskynnys, $tulos->lisaysmaara, $tulos->poistettu);
             return $tuote;
         }
     }
 
+    //kertoo onko tuotteen tiedot kelvollisia kantaan
     public function onkoKelvollinen() {
         $this->virhe = "";
         $ok = true;
@@ -225,16 +189,12 @@ class Tuote {
             $this->virhe .= "Nimi on yli 50 merkkiä, mikä on liian pitkä. (määrä: ". strlen($this->nimi)  .") \n";
             $ok = false;
         }
-        if (strlen($this->tiedot) > 600){
-            $this->virhe .= "Tiedot on yli 600 merkkiä, mikä on liian pitkä. (määrä: ". strlen($this->tiedot)  .") \n";
-            $ok = false;
-        }
         if (!preg_match('/^\d+$/', $this->jaljella)) {
             $this->virhe .= "Määrän pitää olla positiivinen kokonaisluku. \n";
             $ok = false;
         }
         if (!is_numeric($this->hinta)) {
-            $this->virhe .= "Hinnan pitää olla numeerinen ja positiivinen. \n";
+            $this->virhe .= "Hinnan pitää olla numeerinen ja positiivinen, ja pistettä pitää käyttää desimaalieroittimena esim. 12.30 \n";
             $ok = false;
         }
         if (!preg_match('/^\d+$/', $this->lisayskynnys)) {
@@ -252,76 +212,77 @@ class Tuote {
         return $this->virhe;
     }
 
+    //päivittää tuotteen tiedot kantaan
     public function paivitaKantaan() {
-        $sql = "UPDATE Tuote SET nimi = ?, tiedot = ?, hinta = ?, jaljella = ?, lisayskynnys = ?, lisaysmaara = ? , poistettu = ? WHERE tuotenro = ?";
+        $sql = "UPDATE Tuote SET nimi = ?, hinta = ?, jaljella = ?, lisayskynnys = ?, lisaysmaara = ? , poistettu = ? WHERE tuotenro = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute(array($this->nimi, $this->tiedot, $this->getHinta(), $this->getJaljella(), $this->getLisayskynnys(), $this->getLisaysmaara(), $this->getPoistettu(), $this->getTuotenro()));
+        $kysely->execute(array($this->nimi, $this->getHinta(), $this->getJaljella(), $this->getLisayskynnys(), $this->getLisaysmaara(), $this->getPoistettu(), $this->getTuotenro()));
     }
 
+    //lisää tuotteen tiedot kantaan ja luo uuden tuotenron
     public function lisaaKantaan() {
-        $sql = "INSERT INTO Tuote(nimi, tiedot, hinta, jaljella, lisayskynnys, lisaysmaara, poistettu) VALUES(?, ?, ?, ?, ?, ?, ?) RETURNING tuotenro";
+        $sql = "INSERT INTO Tuote(nimi, hinta, jaljella, lisayskynnys, lisaysmaara, poistettu) VALUES(?, ?, ?, ?, ?, ?) RETURNING tuotenro";
         $kysely = getTietokantayhteys()->prepare($sql);
-        $ok = $kysely->execute(array($this->nimi, $this->tiedot, $this->getHinta(), $this->getJaljella(), $this->getLisayskynnys(), $this->getLisaysmaara(), $this->getPoistettu()));
+        $ok = $kysely->execute(array($this->nimi, $this->getHinta(), $this->getJaljella(), $this->getLisayskynnys(), $this->getLisaysmaara(), $this->getPoistettu()));
         if ($ok) {
             $this->tuotenro = $kysely->fetchColumn();
         }
         return $ok;
     }
 
+    //poistaa tuotteen tiedot kannasta tuotenumerolla
     public function poistaKannasta() {
         $sql = "DELETE FROM Tuote WHERE tuotenro = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($this->getTuotenro()));
     }
 
-    public static function getTuotteetTiettyMaaraKohdasta($maara, $kohta) {        
-        $sql = "SELECT tuotenro, nimi, tiedot, hinta, jaljella, lisayskynnys, lisaysmaara, poistettu FROM Tuote WHERE not poistettu = 'Kyllä' ORDER BY tuotenro LIMIT ? OFFSET ?";
+    //palauttaa tietyn määrän tuotteita tietystä kohdasta kannasta, joiden tuotenimi vastaa hakua
+    public static function getTuotteetTiettyMaaraKohdastaHaulla($maara, $kohta, $haku) {        
+        $sql = "SELECT * FROM Tuote WHERE not poistettu = 'Kyllä' and lower(nimi) like lower(?) ORDER BY tuotenro LIMIT ? OFFSET ?";
+        $haku = '%'.$haku.'%';
         $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute(array($maara, $kohta)); 
+        $kysely->execute(array($haku, $maara, $kohta)); 
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
-            $tuote = new Tuote();
-            $tuote->setTuotenro($tulos->tuotenro);
-            $tuote->setNimi($tulos->nimi);
-            $tuote->setTiedot($tulos->tiedot);
-            $tuote->setHinta($tulos->hinta);
-            $tuote->setJaljella($tulos->jaljella);
-            $tuote->setLisayskynnys($tulos->lisayskynnys);
-            $tuote->setLisaysmaara($tulos->lisaysmaara);
-            $tuote->setPoistettu($tulos->poistettu);
+            $tuote = new Tuote($tulos->tuotenro, $tulos->nimi, $tulos->hinta, $tulos->jaljella, $tulos->lisayskynnys, $tulos->lisaysmaara, $tulos->poistettu);
+            $tulokset[] = $tuote;
+        }
+        return $tulokset;
+    }
+    
+    //palauttaa tietyn määrän tuotteita tietystä kohdasta kannasta tuoteryhmänumerolla
+    public static function getTuoteryhmanTuotteetTiettyMaaraKohdasta($tuoteryhmanro, $maara, $kohta) {        
+        $sql = "SELECT A.* FROM Tuote A, Kuuluuryhmiin B WHERE not poistettu = 'Kyllä' and A.tuotenro = B.tuotenro and B.tuoteryhmanro = ? ORDER BY tuotenro LIMIT ? OFFSET ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($tuoteryhmanro, $maara, $kohta)); 
+        $tulokset = array();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $tuote = new Tuote($tulos->tuotenro, $tulos->nimi, $tulos->hinta, $tulos->jaljella, $tulos->lisayskynnys, $tulos->lisaysmaara, $tulos->poistettu);
 
             $tulokset[] = $tuote;
         }
         return $tulokset;
     }
     
-    public static function getTuoteryhmanTuotteetTiettyMaaraKohdasta($tuoteryhmanro, $maara, $kohta) {        
-        $sql = "SELECT A.tuotenro, A.nimi, A.tiedot, A.hinta, A.jaljella, A.lisayskynnys, A.lisaysmaara, A.poistettu FROM Tuote A, Kuuluuryhmiin B WHERE not poistettu = 'Kyllä' and A.tuotenro = B.tuotenro and B.tuoteryhmanro = ? ORDER BY tuotenro LIMIT ? OFFSET ?";
-        $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute(array($tuoteryhmanro, $maara, $kohta)); 
-        $tulokset = array();
-        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
-            $tuote = new Tuote();
-            $tuote->setTuotenro($tulos->tuotenro);
-            $tuote->setNimi($tulos->nimi);
-            $tuote->setTiedot($tulos->tiedot);
-            $tuote->setHinta($tulos->hinta);
-            $tuote->setJaljella($tulos->jaljella);
-            $tuote->setLisayskynnys($tulos->lisayskynnys);
-            $tuote->setLisaysmaara($tulos->lisaysmaara);
-            $tuote->setPoistettu($tulos->poistettu);
-
-            $tulokset[] = $tuote;
-        }
-        return $tulokset;
-    }
-
+    //palauttaa kannasta kaikkien poistamattomien tuotteiden lukumäärän
     public static function lukumaara() {
         $sql = "SELECT count(*) FROM tuote WHERE not poistettu = 'Kyllä'";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute();
         return $kysely->fetchColumn();
     }
+
+    //palauttaa kannasta kaikkien poistamattomien tuotteiden lukumäärän, joiden tuotenimi vastaa hakua
+    public static function lukumaaraHaulla($haku) {
+        $sql = "SELECT count(*) FROM tuote WHERE not poistettu = 'Kyllä' and lower(nimi) like lower(?)";
+        $haku = '%'.$haku.'%';
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($haku));
+        return $kysely->fetchColumn();
+    }
+    
+    //palauttaa kannasta kaikkien poistamattomien tuotteiden lukumäärän tuoteryhmänumerolla
     public static function tuoteryhmanLukumaara($tuoteryhmanro) {
         $sql = "SELECT count(A.*) FROM tuote A, kuuluuryhmiin B WHERE not poistettu = 'Kyllä' and A.tuotenro = B.tuotenro and B.tuoteryhmanro = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -329,6 +290,7 @@ class Tuote {
         return $kysely->fetchColumn();
     }
     
+    //tarkistaa kannasta onko kaikkien tilausrivien tuotteiden varastomaarat suuremmat kuin tilausrivien tilausmaarat tilausnumerolla
     public static function loytyyTuoteMaarat($tilausnro) {
         $sql = "SELECT A.tuotenro, A.lkm, B.jaljella FROM tilausrivi A, Tuote B where A.tilausnro = ? and A.tuotenro = B.tuotenro";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -341,6 +303,7 @@ class Tuote {
         return true;
     }
     
+    //paivittaa tuotteiden varastomäärät kannasta vähentämällä niistä tilausrivien määrät tilausnumerolla
     public static function vahennaTuoteMaarat($tilausnro) {
         $sql = "SELECT tuotenro, lkm FROM tilausrivi where tilausnro = ?;";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -356,25 +319,25 @@ class Tuote {
         }
     }
     
+    //palauttaa kannasta lukumäärän tuotteista joiden varastomäärä alittaa kynnyksen
+    public static function lukumaaraAliKynnyksen() {
+        $sql = "SELECT count(*) FROM tuote WHERE not poistettu = 'Kyllä' and jaljella < lisayskynnys";
+        $kysely = getTietokantayhteys()->prepare($sql);        
+        $kysely->execute();
+        return $kysely->fetchColumn();
+    }
+    
+    //palauttaa kannasta tietyt tuotteet tietystä kohdasta joiden varastomäärä alittaa kynnyksen
     public static function getTuotteetMaaraAliKynnyksenTiettyMaaraKohdasta($maara, $kohta) {
-        $sql = "SELECT tuotenro, nimi, tiedot, hinta, jaljella, lisayskynnys, lisaysmaara, poistettu FROM Tuote WHERE not poistettu = 'Kyllä' and jaljella < lisayskynnys ORDER BY tuotenro LIMIT ? OFFSET ?";
+        $sql = "SELECT * FROM Tuote WHERE not poistettu = 'Kyllä' and jaljella < lisayskynnys ORDER BY tuotenro LIMIT ? OFFSET ?";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($maara, $kohta));
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
-            $tuote = new Tuote();
-            $tuote->setTuotenro($tulos->tuotenro);
-            $tuote->setNimi($tulos->nimi);
-            $tuote->setTiedot($tulos->tiedot);
-            $tuote->setHinta($tulos->hinta);
-            $tuote->setJaljella($tulos->jaljella);
-            $tuote->setLisayskynnys($tulos->lisayskynnys);
-            $tuote->setLisaysmaara($tulos->lisaysmaara);
-            $tuote->setPoistettu($tulos->poistettu);
+            $tuote = new Tuote($tulos->tuotenro, $tulos->nimi, $tulos->hinta, $tulos->jaljella, $tulos->lisayskynnys, $tulos->lisaysmaara, $tulos->poistettu);
 
             $tulokset[] = $tuote;
         }
         return $tulokset;
     }
-
 }

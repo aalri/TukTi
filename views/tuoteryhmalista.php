@@ -1,11 +1,5 @@
-<?php
-if ($data->lista === null) {
-    ?>
-    <h2>Ei ole Tuoteryhmiä</h2>
-    <?php
-}
-?>
 <h2>Tuoteryhmät</h2>
+<?php if ($data->sivuja > 0){ ?>
 <p>Sivu <?php echo $data->sivu ?>/<?php echo $data->sivuja ?></p>
 <table class="table table-striped">
     <thead>
@@ -29,4 +23,6 @@ if ($data->lista === null) {
 <?php endif; ?>
 <?php if ($data->sivu < $data->sivuja): ?>
 <a href="?ikkuna=tuoteryhmat&sivu=<?php echo $data->sivu + 1; ?>" class="btn btn-xs btn-default" role="button">Seuraava sivu</a>
-<?php endif; ?>
+<?php endif; }else{?>
+<p>Ei ole tuoteryhmiä.</p>
+<?php } ?>

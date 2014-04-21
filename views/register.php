@@ -15,7 +15,7 @@
             </div>
             <form class="form-horizontal" name="form" role="form" action="" method="POST">      
                 <div class="form-group">
-                    
+
                     <label for="inputName" class="col-md-2 control-label">Tunnus</label>
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="inputName" name="tunnus" value="<?php echo $data->asiakas->getTunnus() ?>">
@@ -42,12 +42,13 @@
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <button type="submit" name="tallennetturekisteroityminen" value="kylla" class="btn btn-default">Rekisteröidy</button>
+                        <a href="index.php" class="btn btn-xs btn-default" role="button"> Palaa</a>
                     </div>
-                </div>
-                <?php if (!empty($data->virhe)): ?>
-                    <div class="alert alert-danger"><?php echo $data->virhe; ?></div>
-                <?php endif; ?>
-            </form>
+                </div>      
+            </form>            
+            <?php if (!empty($data->virhe)): ?>
+                <div class="alert alert-danger"><?php echo $data->virhe; ?></div>
+            <?php endif; ?>
         </div>
     </body>
 </html>

@@ -50,6 +50,7 @@ class Tilausrivi {
         return $this->lkm * $this->ostohetkenkplhinta;
     }
 
+    //palauttaa kaikki tilausrivit kannasta
     public static function getTilausrivit() {
         $sql = "SELECT tilausnro, tuotenro, lkm, ostohetkenkplhinta FROM Tilausrivi ORDER BY tilausnro";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -65,24 +66,29 @@ class Tilausrivi {
         }
         return $tulokset;
     }
-
-    public static function getTilausrivitTilausnumerolla($tilausnro) {
-        $sql = "SELECT tilausnro, tuotenro, lkm, ostohetkenkplhinta FROM Tilausrivi where tilausnro = ? ORDER BY tilausnro ASC";
+    
+    //palauttaa tilausrivien lukumäärän kannassa tilausnumerolla
+    public static function lukumaaraTilausnumerolla($tilausnro) {
+        $sql = "SELECT count(*) FROM Tilausrivi WHERE tilausnro = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($tilausnro));
+        return $kysely->fetchColumn();
+    }
+
+    //palauttaa tietyn määrän tilausrivejä tietystä kohdasta kannasta tilausnumerolla
+    public static function getTilausrivitTilausnumerollaTiettyMaaraKohdasta($tilausnro, $maara, $kohta) {
+        $sql = "SELECT tilausnro, tuotenro, lkm, ostohetkenkplhinta FROM Tilausrivi where tilausnro = ? ORDER BY tilausnro ASC LIMIT ? OFFSET ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($tilausnro, $maara, $kohta));
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
-            $tilausrivi = new Tilausrivi();
-            $tilausrivi->setTilausnro($tulos->tilausnro);
-            $tilausrivi->setTuotenro($tulos->tuotenro);
-            $tilausrivi->setLkm($tulos->lkm);
-            $tilausrivi->setOstoHetkenKplhinta($tulos->ostohetkenkplhinta);
-
+            $tilausrivi = new Tilausrivi($tulos->tilausnro, $tulos->tuotenro, $tulos->lkm, $tulos->ostohetkenkplhinta);
             $tulokset[] = $tilausrivi;
         }
         return $tulokset;
     }
 
+    //palauttaa tilausrivien yhteenlasketun hinnan tilausnumerolla kannasta
     public static function getTilausrivitHintaYhteensaTilausnumerolla($tilausnro) {
         $sql = "SELECT lkm, ostohetkenkplhinta FROM Tilausrivi where tilausnro = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -94,8 +100,9 @@ class Tilausrivi {
         return $yhteensa;
     }
 
+    //kertoo onko kannassa tilausrivejä tuotenumerolla
     public static function onTilausrivejaTuotenumerolla($tuotenro) {
-        $sql = "SELECT tilausnro, tuotenro, lkm, ostohetkenkplhinta FROM Tilausrivi where tilausnro = ? LIMIT 1";
+        $sql = "SELECT tilausnro, tuotenro, lkm, ostohetkenkplhinta FROM Tilausrivi where tuotenro = ? LIMIT 1";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($tuotenro));
         $tulos = $kysely->fetchObject();
@@ -106,6 +113,7 @@ class Tilausrivi {
         }
     }
     
+    //lisää kantaa uuden tilausrivin tiedoilla
     public static function luoKantaanUusitilausrivi($tilausnro, $tuotenro, $lkm, $ostohetkenkplhinta) {
         $sql = "INSERT INTO Tilausrivi(tilausnro, tuotenro, lkm, ostohetkenkplhinta) VALUES(?,?,?,?) RETURNING tilausnro";
         $kysely = getTietokantayhteys()->prepare($sql);        

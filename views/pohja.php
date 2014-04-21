@@ -35,7 +35,7 @@
                 <div class="col-md-3">
                     <?php
                     require 'nav.php';
-                    ?>
+                    ?>   
                 </div>
                 <div class="col-md-6"> 
                     <?php

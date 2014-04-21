@@ -9,10 +9,14 @@ if ($tuoteryhma === null){
     $_SESSION['varoitus'] = "Tuoteryhmää ei löytynyt kannasta";
     header('Location: index.php?ikkuna=tuoteryhmatjatuotteet'); 
 }
-$lista = Tuote::getTuotteetJaKuuluvuudetTuoteryhmaan($tuoteryhmanro);
+$rivimaara = 5;
+$lkm = Tuote::lukumaara();
+$sivuja = ceil($lkm / $rivimaara);
+$sivu = annaNykyinenSivu($sivuja);
+$lista = Tuote::getTuotteetJaKuuluvuudetTuoteryhmaanTiettyMaaraKohdasta($tuoteryhmanro, $rivimaara, $rivimaara*($sivu-1));
 if (empty($_POST['tallennettumuutokset'])) {
     naytaNakyma("muokkaatuoteryhmaankuuluvattuotteet.php", array(
-        'tuoteryhma' => $tuoteryhma, 'lista' => $lista
+        'tuoteryhma' => $tuoteryhma, 'lista' => $lista, 'sivu' => $sivu, 'sivuja' => $sivuja
     ));
     exit();
 }
@@ -36,4 +40,4 @@ foreach ($lista as $asia) {
     }
 }
 $_SESSION['ilmoitus'] = $ilmoitus;
-header('Location: index.php?ikkuna=tuoteryhmatjatuotteet'); 
+header('Location: index.php?ikkuna=muokkaatuoteryhmaankuuluvattuotteet&tuoteryhma='.$tuoteryhmanro.'&sivu='.$sivu); 

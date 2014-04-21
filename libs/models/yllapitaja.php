@@ -36,6 +36,7 @@ class Yllapitaja {
         return $this->salasana;
     }
 
+    //palauttaa kannasta kaikki ylläpitäjät
     public static function getYllapitajat() {
         $sql = "SELECT Id, tunnus, salasana FROM Yllapitaja ORDER BY Id ASC";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -51,6 +52,7 @@ class Yllapitaja {
         return $tulokset;
     }
     
+    //palauttaa kanasta ylläpitäjän tunnuksella ja salasanalla
     public static function etsiKayttajaTunnuksilla($tunnus, $salasana) {
     $sql = "SELECT id, tunnus, salasana FROM Yllapitaja WHERE tunnus = ? AND salasana = ? LIMIT 1";
     $kysely = getTietokantayhteys()->prepare($sql);
@@ -67,6 +69,4 @@ class Yllapitaja {
       return $yllapitaja;
     }
   }
-
-  /* Tähän muita Käyttäjäluokan metodeita */
 }

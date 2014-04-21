@@ -11,7 +11,7 @@ if (!empty($_POST['poista'])){
     $tuoteryhma = Tuoteryhma::etsiNumerolla($tuoteryhmanro);
     Tuoteryhma::poista($tuoteryhmanro);
     $_SESSION['ilmoitus'] = "Tuoteryhmä: '".$tuoteryhma->getNimi()."' poistettu onnistuneesti";
-    header('Location: index.php?ikkuna=tuoteryhmatjatuotteet$sivu='.$_GET['sivu']);
+    header('Location: index.php?ikkuna=tuoteryhmatjatuotteet&sivu='.$_GET['sivu']);
 }
 $lista = Tuoteryhma::getTuoteryhmatTiettyMaaraKohdasta($rivimaara, $rivimaara*($sivu-1));
 naytaNakyma("tuoteryhmatjatuotteet.php", array('lista' => $lista, 'sivu' => $sivu, 'sivuja' => $sivuja));
