@@ -173,7 +173,7 @@ class Asiakas {
 
     //palauttaa asiakkaan kannasta, jolla on salasana ja tunnus, ja ei ole poistettu
     public static function etsiKayttajaTunnuksilla($tunnus, $salasana) {
-        $sql = "SELECT asiakasnro, nimi, osoite, tunnus, salasana, poistettu FROM Asiakas WHERE tunnus = ? AND salasana = ? AND not poistettu = 'Kyllä LIMIT 1";
+        $sql = "SELECT asiakasnro, nimi, osoite, tunnus, salasana, poistettu FROM Asiakas WHERE tunnus = ? AND salasana = ? AND not poistettu = 'Kyllä' LIMIT 1";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($tunnus, $salasana));
         $tulos = $kysely->fetchObject();
