@@ -83,19 +83,32 @@ class Kuuluuryhmiin {
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($tuotenro, $tuoteryhmanro));
     }
-    
+
     //poistaa kannasta Kuuluuryhmiin tuotenumerolla
     public static function poistaTuotenro($tuotenro) {
         $sql = "DELETE FROM Kuuluuryhmiin WHERE tuotenro = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($tuotenro));
     }
-    
+
     //poistaa kannasta Kuuluuryhmiin tuoteryhmanumerolla
     public static function poistaTuoteryhmanro($tuoteryhmanro) {
         $sql = "DELETE FROM Kuuluuryhmiin WHERE tuoteryhmanro = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($tuoteryhmanro));
+    }
+
+    //tarkistaa kuuluuko tuotenro mihinkään tuoteryhmään
+    public static function kuuluuTuoteryhmaan($tuotenro) {
+        $sql = "SELECT tuotenro FROM Kuuluuryhmiin where tuotenro = ? LIMIT 1";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($tuotenro));
+        $tulos = $kysely->fetchObject();
+        if ($tulos == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

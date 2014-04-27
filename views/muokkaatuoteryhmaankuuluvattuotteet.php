@@ -1,6 +1,6 @@
 <h2>Tuoteryhmään <?php echo $data->tuoteryhma->getNimi() ?> kuuluu</h2>
 <?php if ($data->sivuja > 0){ ?>
-<p>Huom! muutokset unohtuvat vaihdettaessa sivua, jos muutoksia ei tallenna.</p>
+<p>Huom! muutokset unohtuvat vaihdettaessa sivua, jos niitä ei tallenna.</p>
 <p>Sivu <?php echo $data->sivu ?>/<?php echo $data->sivuja ?></p>
 <form role="form" method="POST" action=""> 
     <table class="table table-striped">    

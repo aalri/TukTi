@@ -29,7 +29,7 @@ if ($data->tuoteryhma === null) {
                 <tr>                                    
                     <td><?php echo $asia->getNimi(); ?></td>
                     <td><?php echo $asia->getJaljella(); ?></td>
-                    <td><?php echo $asia->getHinta(); ?></td>
+                    <td><?php echo $asia->getHinta(); ?> e</td>
                     <?php if (kirjautunutAsiakas()) { ?>
                         <td>
                             <form class="form-vertical" role="form" method="POST" action=""> 

@@ -193,7 +193,7 @@ class Tuote {
             $this->virhe .= "Määrän pitää olla positiivinen kokonaisluku. \n";
             $ok = false;
         }
-        if (!is_numeric($this->hinta)) {
+        if (!is_numeric($this->hinta) || $this->hinta < 0.0) {
             $this->virhe .= "Hinnan pitää olla numeerinen ja positiivinen, ja pistettä pitää käyttää desimaalieroittimena esim. 12.30 \n";
             $ok = false;
         }
@@ -319,17 +319,17 @@ class Tuote {
         }
     }
     
-    //palauttaa kannasta lukumäärän tuotteista joiden varastomäärä alittaa kynnyksen
+    //palauttaa kannasta lukumäärän tuotteista joiden varastomäärä alittaa kynnyksen, ja joiden lisäysmäärä ei ole 0
     public static function lukumaaraAliKynnyksen() {
-        $sql = "SELECT count(*) FROM tuote WHERE not poistettu = 'Kyllä' and jaljella < lisayskynnys";
+        $sql = "SELECT count(*) FROM tuote WHERE not poistettu = 'Kyllä' and jaljella < lisayskynnys and lisaysmaara > 0";
         $kysely = getTietokantayhteys()->prepare($sql);        
         $kysely->execute();
         return $kysely->fetchColumn();
     }
     
-    //palauttaa kannasta tietyt tuotteet tietystä kohdasta joiden varastomäärä alittaa kynnyksen
+    //palauttaa kannasta tietyt tuotteet tietystä kohdasta joiden varastomäärä alittaa kynnyksen, ja joiden lisäysmäärä ei ole 0
     public static function getTuotteetMaaraAliKynnyksenTiettyMaaraKohdasta($maara, $kohta) {
-        $sql = "SELECT * FROM Tuote WHERE not poistettu = 'Kyllä' and jaljella < lisayskynnys ORDER BY tuotenro LIMIT ? OFFSET ?";
+        $sql = "SELECT * FROM Tuote WHERE not poistettu = 'Kyllä' and jaljella < lisayskynnys and lisaysmaara > 0 ORDER BY tuotenro LIMIT ? OFFSET ?";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($maara, $kohta));
         $tulokset = array();

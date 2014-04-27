@@ -5,6 +5,7 @@
     <thead>
         <tr>
             <th>Tilausnro</th>
+            <th>Asiakasnro</th>
             <th>Toimitettu</th>
             <th>Tilauspäivä</th>
             <th>Maksettu</th>
@@ -17,6 +18,7 @@
             ?>
             <tr>                                    
                 <td><?php echo $asia->getTilausnro(); ?></td>
+                <td><?php echo $asia->getAsiakasnro(); ?></td>
                 <td><?php if ($asia->getToimitettu()){ echo Kyllä;}else{echo Ei;} ?></td>
                 <td><?php echo $asia->getTilauspaiva(); ?></td>
                 <td><?php if ($asia->getMaksettu()){ echo Kyllä;}else{echo Ei;} ?></td>

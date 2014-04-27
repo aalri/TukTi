@@ -13,6 +13,12 @@
         </div>
     </div>    
     <div class="form-group">
+        <label for="inputName" class="col-md-2 control-label">Uusi Salasana (Tyhjä ei muutosta)</label>
+        <div class="col-md-10">
+            <input type="password" class="form-control" id="inputName" name="salasana" value="">
+        </div>
+    </div>    
+    <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <button type="submit" name="tallennettumuutokset" value="kylla" class="btn btn-default">Tallenna muutokset</button>
         </div>

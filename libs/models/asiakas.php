@@ -222,9 +222,9 @@ class Asiakas {
 
     //päivittää kantaan asiakkaan tiedot numerolla
     public function paivitaKantaan() {
-        $sql = "UPDATE Asiakas SET nimi = ?, osoite = ?, poistettu = ? WHERE asiakasnro = ?";
+        $sql = "UPDATE Asiakas SET nimi = ?, osoite = ?, poistettu = ?, salasana = ? WHERE asiakasnro = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute(array($this->nimi, $this->osoite, $this->poistettu, $this->asiakasnro));
+        $kysely->execute(array($this->nimi, $this->osoite, $this->poistettu, $this->salasana, $this->asiakasnro));
     }
 
     //lisää uuden asiakkaan tiedot kantaan ja luo numeron
